@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>waffle — pattern quarry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter); }
+
+  header.page { padding: var(--sp-2xl) 0 var(--sp-xl); }
+  header.page p { color: var(--color-muted); margin: var(--sp-sm) 0 0; max-width: 62ch; }
+  h1 { font-family: var(--font-mono); font-weight: 700; font-size: 32px; margin: 0; }
+  h2 {
+    font-family: var(--font-mono); font-weight: 700; font-size: 20px;
+    text-transform: uppercase; letter-spacing: .02em; margin: 0 0 var(--sp-xs);
+  }
+  h2 .count { color: var(--color-muted); font-weight: 400; text-transform: none; margin-left: var(--sp-sm); }
+  .section-note { color: var(--color-muted); font-size: 13px; margin: 0 0 var(--sp-lg); max-width: 68ch; }
+  section { padding: var(--sp-xl) 0; }
+  section[hidden] { display: none; }
+
+  /* tab bar */
+  .tabbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: 4px;
+    background: var(--color-bg);
+    padding: var(--sp-md) 0;
+    border-bottom: 1px solid var(--color-cappuccino);
+  }
+  .tabbtn {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .02em;
+    color: var(--color-muted); background: none; border: 1px solid transparent; border-radius: 20px;
+    padding: 7px 14px; cursor: pointer;
+  }
+  .tabbtn:hover { color: var(--color-text); border-color: var(--color-cappuccino); }
+  .tabbtn.active { background: var(--color-accent); color: var(--color-on-accent); font-weight: 700; }
+
+  /* pattern grid */
+  .pat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-lg); }
+  .pat-card {
+    border: 1px solid var(--color-cappuccino); border-radius: 6px;
+    background: var(--color-vanilla); overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .pat-stage {
+    padding: var(--sp-xl) var(--sp-lg); display: flex; align-items: center; justify-content: center;
+    background: var(--color-cappuccino); min-height: 96px;
+  }
+  .pat-stage.dark { background: var(--color-blueberry); }
+  .pat-meta { padding: var(--sp-md) var(--sp-lg); border-top: 1px solid var(--color-cappuccino); }
+  .pat-name { font-family: var(--font-mono); font-size: 13px; font-weight: 700; margin: 0 0 4px; }
+  .pat-spec { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); margin: 0 0 8px; line-height: 1.6; }
+  .origin { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--color-muted); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dot.lab { background: var(--color-lemon); border: 1px solid var(--color-hazelnut); }
+  .dot.fontane { background: var(--color-grape); }
+  .dot.fuller { background: var(--color-hazelnut); }
+
+  /* --- rendered example primitives (waffle-ified versions of the extracted patterns) --- */
+
+  /* buttons */
+  .ex-btn { font-family: var(--font-mono); font-size: 12px; cursor: default; text-decoration: none; display: inline-block; }
+  .ex-btn-ghost { color: var(--color-blueberry); font-weight: 700; text-transform: uppercase; background: none; border: none; padding: 0; }
+  .ex-btn-primary { background: var(--color-grape); color: var(--color-vanilla); border: 1px solid var(--color-grape); border-radius: 6px; padding: 8px 16px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .ex-btn-secondary { background: var(--color-vanilla); color: var(--color-blueberry); border: 1px solid var(--color-blueberry); border-radius: 6px; padding: 8px 16px; text-transform: uppercase; letter-spacing: .04em; }
+  .ex-btn-toolbar { display: inline-flex; gap: 6px; }
+  .ex-btn-toolbar span { padding: 4px 8px; border-radius: 6px; font-size: 12px; }
+  .ex-btn-toolbar .active { background: var(--color-blueberry); color: var(--color-vanilla); }
+  .ex-btn-toolbar .idle { color: var(--color-vanilla); opacity: .7; }
+
+  /* tags / badges */
+  .ex-tag-plain { font-family: var(--font-mono); font-size: 11px; color: var(--color-lemon); }
+  .ex-tag-pill { font-family: var(--font-mono); font-size: 11px; color: var(--color-grape); background: rgba(81,0,255,.1); padding: 3px 8px; border-radius: 2px; }
+  .ex-badge-ribbon { font-family: var(--font-mono); font-size: 11px; font-weight: 700; background: var(--color-lemon); color: var(--color-blueberry); padding: 4px 10px; border-radius: 3px; }
+  .ex-meta-caption { font-family: var(--font-sans); font-size: 11px; color: var(--color-hazelnut); }
+
+  /* cards */
+  .ex-media-card { width: 100%; max-width: 220px; border-radius: 4px; overflow: hidden; background: var(--color-cappuccino); }
+  .ex-media-card .img { height: 60px; background: linear-gradient(135deg, var(--color-blueberry), var(--color-grape)); }
+  .ex-media-card .body { background: rgba(31,25,52,.85); color: var(--color-vanilla); padding: var(--sp-md); }
+  .ex-media-card .body h4 { font-family: var(--font-sans); font-size: 13px; margin: 0 0 4px; }
+  .ex-media-card .body .tags { font-family: var(--font-mono); font-size: 10px; color: var(--color-lemon); }
+
+  .ex-info-card { border: 1px solid var(--color-hazelnut); background: var(--color-vanilla); padding: var(--sp-lg); width: 100%; }
+  .ex-info-card h4 { font-size: 14px; font-weight: 700; margin: 0 0 4px; }
+  .ex-info-card p { font-size: 12px; color: var(--color-muted); margin: 0; }
+
+  .ex-step-card { background: var(--color-vanilla); border: 1px solid var(--color-cappuccino); padding: var(--sp-md); width: 100%; }
+  .ex-step-card .idx { font-family: var(--font-mono); font-size: 11px; color: var(--color-grape); display: block; margin-bottom: 8px; }
+  .ex-step-card h4 { font-size: 13px; font-weight: 700; margin: 0 0 6px; }
+  .ex-step-card .tag { display: inline-block; margin-top: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--color-grape); background: rgba(81,0,255,.08); padding: 2px 6px; border-radius: 2px; }
+
+  /* nav */
+  .ex-nav { display: flex; gap: var(--sp-lg); font-family: var(--font-mono); font-size: 12px; }
+  .ex-nav a { color: var(--color-vanilla); text-decoration: none; opacity: .7; }
+  .ex-nav a.active { opacity: 1; text-decoration: underline; }
+  .ex-nav-numbered { display: flex; gap: var(--sp-md); font-family: var(--font-mono); font-size: 12px; }
+  .ex-nav-numbered a { color: var(--color-vanilla); text-decoration: none; }
+  .ex-nav-numbered .num { color: var(--color-lemon); margin-right: 4px; }
+
+  /* forms & controls */
+  .ex-checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .ex-checkbox-row input { accent-color: var(--color-grape); width: 15px; height: 15px; }
+  .ex-slider { width: 100%; accent-color: var(--color-grape); }
+  .ex-tabs { display: inline-flex; border: 1px solid var(--color-hazelnut); border-radius: 6px; overflow: hidden; }
+  .ex-tabs span { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .03em; padding: 8px 12px; }
+  .ex-tabs .active { background: var(--color-vanilla); color: var(--color-blueberry); }
+  .ex-tabs .idle { background: var(--color-blueberry); color: var(--color-vanilla); opacity: .8; }
+  .ex-modal { border: 1px solid var(--color-blueberry); border-radius: 8px; background: var(--color-vanilla); padding: var(--sp-lg); width: 100%; }
+  .ex-modal h4 { font-size: 14px; margin: 0 0 8px; }
+  .ex-modal p { font-size: 12px; color: var(--color-muted); margin: 0 0 12px; }
+
+  /* data display */
+  .ex-kpi-row { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; padding: 8px 0; border-bottom: 1px solid var(--color-hazelnut); width: 100%; color: var(--color-vanilla); }
+  .ex-kpi-row .val { color: var(--color-lemon); font-weight: 700; }
+  .ex-progress { width: 100%; }
+  .ex-progress .track { height: 8px; background: var(--color-cappuccino); border-radius: 4px; overflow: hidden; }
+  .ex-progress .fill { height: 100%; width: 62%; background: var(--color-grape); }
+  .ex-timeline { position: relative; padding-left: 20px; border-left: 2px solid var(--color-cappuccino); width: 100%; }
+  .ex-timeline .item { position: relative; padding-bottom: 16px; font-size: 12px; }
+  .ex-timeline .item::before { content: ""; position: absolute; left: -25px; top: 3px; width: 8px; height: 8px; background: var(--color-grape); border-radius: 50%; }
+  .ex-timeline .item h5 { font-size: 12px; margin: 0 0 2px; }
+  .ex-timeline .item p { font-size: 11px; color: var(--color-muted); margin: 0; }
+
+  /* layout */
+  .ex-eyebrow { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--color-grape); display: flex; align-items: center; gap: 8px; }
+  .ex-eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--color-grape); display: inline-block; }
+  .ex-sticky-header { width: 100%; background: rgba(31,25,52,.9); color: var(--color-vanilla); padding: 10px 14px; font-family: var(--font-mono); font-size: 11px; border-radius: 4px; }
+
+  footer { padding: var(--sp-2xl) 0 var(--sp-3xl); color: var(--color-muted); font-family: var(--font-mono); font-size: 12px; }
+  footer a { color: var(--color-grape); }
+
+  /* --- findings callout --- */
+  .finding-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-md); }
+  .finding-card { border: 1px solid var(--color-grape); border-radius: 8px; padding: var(--sp-md) var(--sp-lg); background: rgba(81,0,255,.05); }
+  .finding-card h3 { font-family: var(--font-mono); font-size: 13px; margin: 0 0 6px; }
+  .finding-card p { font-size: 13px; color: var(--color-blueberry); margin: 0 0 6px; line-height: 1.5; }
+  .finding-card code { font-family: var(--font-mono); font-size: 12px; background: var(--color-cappuccino); padding: 1px 4px; border-radius: 3px; }
+  .finding-card .rec { font-size: 12px; color: var(--color-grape); font-weight: 700; }
+
+  /* --- glass cards / pill buttons (FullerHome real app) --- */
+  .ex-glass-card { background: rgba(255,255,255,.65); border: 1px solid var(--color-cappuccino); border-radius: 12px; padding: var(--sp-lg); width: 100%; }
+  .ex-glass-card .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--color-cappuccino); font-size: 12px; }
+  .ex-glass-card .row:last-child { border-bottom: none; }
+  .ex-glass-card .row .val { font-family: var(--font-mono); color: var(--color-blueberry); }
+  .ex-glass-card .row.total .val { background: var(--color-lemon); color: var(--color-blueberry); padding: 0 6px; border-radius: 3px; font-weight: 700; }
+
+  .ex-pill-primary { display: inline-block; padding: 12px 26px; border-radius: 24px; border: 1.5px solid var(--color-blueberry); background: var(--color-lemon); color: var(--color-blueberry); font-family: var(--font-mono); font-size: 13px; font-weight: 700; }
+  .ex-pill-secondary { display: inline-block; padding: 10px 22px; border-radius: 24px; border: 1.5px solid var(--color-blueberry); background: rgba(255,255,255,.7); color: var(--color-blueberry); font-family: var(--font-mono); font-size: 12px; margin-left: 8px; }
+  .ex-toggle-group { display: inline-flex; gap: 6px; }
+  .ex-toggle { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--color-hazelnut); background: rgba(255,255,255,.7); color: var(--color-blueberry); font-family: var(--font-mono); font-size: 11px; }
+  .ex-toggle.active { background: var(--color-lemon); border-color: var(--color-blueberry); font-weight: 700; }
+
+  .ex-badge-accent { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--color-blueberry); background: var(--color-lemon); padding: 2px 8px; border-radius: 4px; }
+  .ex-chip-dashed { display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); background: var(--color-vanilla); border: 1px dashed var(--color-hazelnut); padding: 4px 10px; border-radius: 20px; }
+
+  /* --- data tables --- */
+  .ex-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ex-table th { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; text-align: left; color: var(--color-muted); padding: 6px 8px; border-bottom: 1px solid var(--color-hazelnut); }
+  .ex-table td { padding: 8px; border-bottom: 1px solid var(--color-cappuccino); }
+
+  /* --- app shell primitives (Spirit Sprint) --- */
+  .ex-rail { background: var(--color-blueberry); color: var(--color-vanilla); padding: var(--sp-md); border-radius: 6px; width: 100%; font-family: var(--font-sans); }
+  .ex-rail .brand { font-family: var(--font-mono); font-weight: 700; font-size: 11px; text-transform: uppercase; margin-bottom: 10px; }
+  .ex-rail .brand span { color: var(--color-lemon); }
+  .ex-rail .step { display: block; padding: 5px 8px; border-radius: 5px; font-size: 12px; color: rgba(234,232,224,.8); }
+  .ex-rail .step.active { background: var(--color-lemon); color: var(--color-blueberry); font-weight: 700; }
+
+  .ex-quad { position: relative; width: 100%; height: 110px; border: 1px solid var(--color-cappuccino); border-radius: 4px; background: var(--color-vanilla); }
+  .ex-quad::before, .ex-quad::after { content: ""; position: absolute; background: var(--color-cappuccino); }
+  .ex-quad::before { left: 0; right: 0; top: 50%; height: 1px; }
+  .ex-quad::after { top: 0; bottom: 0; left: 50%; width: 1px; }
+  .ex-quad .pin { position: absolute; font-family: var(--font-mono); font-size: 9px; background: var(--color-cappuccino); color: var(--color-muted); padding: 3px 7px; border-radius: 20px; transform: translate(-50%,-50%); white-space: nowrap; }
+  .ex-quad .pin.us { background: var(--color-lemon); color: var(--color-blueberry); font-weight: 700; }
+
+  .ex-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+  .ex-board .col h5 { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; color: var(--color-muted); text-align: center; margin: 0 0 6px; }
+  .ex-board .note { background: var(--color-cappuccino); border-radius: 4px; padding: 6px 8px; font-size: 10.5px; margin-bottom: 6px; position: relative; }
+  .ex-board .note.kept { background: var(--color-lemon); color: var(--color-blueberry); font-weight: 700; }
+
+  .ex-road { width: 100%; }
+  .ex-road .line { height: 2px; background: var(--color-cappuccino); margin: 0 16px 8px; position: relative; }
+  .ex-road .years { display: flex; justify-content: space-between; }
+  .ex-road .year { text-align: center; font-family: var(--font-mono); font-size: 10px; width: 40px; }
+  .ex-road .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-hazelnut); margin: 0 auto 4px; }
+  .ex-road .year.now .dot { background: var(--color-grape); width: 12px; height: 12px; }
+
+  .ex-spirit-card { background: var(--color-blueberry); color: var(--color-vanilla); border-radius: 10px; padding: var(--sp-lg); width: 100%; }
+  .ex-spirit-card .eyebrow { color: var(--color-lemon); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .ex-spirit-card h4 { font-size: 15px; margin: 0 0 10px; }
+  .ex-spirit-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.12); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="page">
+    <h1>waffle / patterns</h1>
+    <p>UI-Muster gesammelt aus lab.aisu.studio, fontane.studio (live), AisuStudio/FullerHome und AisuStudio/spiritsprint (echte Repos) — nach Component sortiert, in waffle-Tokens übersetzt. Nichts hier ist final; das ist die Auswahl-Basis für eine spätere richtige <code>components.css</code>.</p>
+  </header>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tabbtn" data-tab="findings">Befund</button>
+    <button class="tabbtn" data-tab="buttons">Buttons</button>
+    <button class="tabbtn" data-tab="tags">Tags &amp; Badges</button>
+    <button class="tabbtn" data-tab="cards">Cards</button>
+    <button class="tabbtn" data-tab="nav">Navigation</button>
+    <button class="tabbtn" data-tab="forms">Forms</button>
+    <button class="tabbtn" data-tab="data">Data Display</button>
+    <button class="tabbtn" data-tab="layout">Layout</button>
+    <button class="tabbtn" data-tab="glass-cards">Glass Cards</button>
+    <button class="tabbtn" data-tab="tables">Tabellen</button>
+    <button class="tabbtn" data-tab="app-shell">App-Shell</button>
+  </nav>
+
+  <section id="findings">
+    <h2>Befund: Token-Ebene <span class="count">wichtiger als jedes einzelne Pattern</span></h2>
+    <p class="section-note">Nachtrag nach Durchsicht der echten Repos (AisuStudio/FullerHome, AisuStudio/spiritsprint statt nur der lokalen Design-Datei). Der wertvollste Fund ist nicht ein neues Component — es sind drei bereits gelöste Probleme, die waffle noch nicht hat.</p>
+    <div class="finding-grid">
+      <div class="finding-card">
+        <h3>1. aisukurimu-tokens.css ist bereits dein components.css</h3>
+        <p>lab.aisu.studio und spiritsprint nutzen beide dieselbe Utility-Class-Schicht aus <code>github.com/AisuStudio/aisukurimu</code>: <code>.nav-item</code>, <code>.tag</code>, <code>.eyebrow</code>, <code>.link-big</code>, <code>.caption</code>, <code>.h1-vanilla</code>, <code>.container</code>, <code>.hr</code> — exakt die Typo/Nav-Bausteine, die ich unten aus dem DOM nachgebaut habe.</p>
+        <p class="rec">→ Statt Patterns neu zu erfinden: aisukurimu-tokens.css nach waffle holen (oder waffle darauf aufbauen lassen).</p>
+      </div>
+      <div class="finding-card">
+        <h3>2. --color-muted ist in waffle nicht WCAG-konform</h3>
+        <p>FullerHomes <code>globals.css</code> hat denselben Token-Satz wie waffle, aber mit Kommentar: <code>--color-muted: #66655f</code> statt Hazelnut <code>#9e9c95</code> — „#93928e auf Vanilla ist nur 2.6:1 Kontrast, auf ≥4.5:1 abgedunkelt". Das ist ein echter Accessibility-Fix, kein Geschmacksunterschied.</p>
+        <p class="rec">→ Sollte 1:1 zurück in waffles tokens.css.</p>
+      </div>
+      <div class="finding-card">
+        <h3>3. Fehlendes Paar: --color-on-accent</h3>
+        <p>FullerHome und spiritsprint nutzen konsequent <code>accent-bg + on-accent-text</code> als Signal für „aktiv/ausgewählt/hervorgehoben" (Tabs, Toggles, Badges, Chips, Totals). Waffle hat <code>--color-accent</code>, aber keinen definierten Gegenpart.</p>
+        <p class="rec">→ <code>--color-on-accent: var(--color-blueberry)</code> ergänzen; macht das Semantic-Pairing explizit statt implizit.</p>
+      </div>
+      <div class="finding-card">
+        <h3>4. spiritsprint hat schon Dark Mode</h3>
+        <p>Komplettes Set <code>--bg/--surface/--surface-2/--ink/--muted/--accent/--highlight/--border</code>, definiert doppelt: über <code>prefers-color-scheme</code> und <code>[data-theme]</code>-Override. Im Dark Mode wird <code>--accent</code> zu einem helleren Violett (<code>#b298ff</code>), nicht 1:1 Grape — sonst zu dunkel auf dunklem Grund.</p>
+        <p class="rec">→ Falls waffle mal Dark Mode braucht: dieses Muster übernehmen statt neu entwerfen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="buttons" hidden>
+    <h2>Buttons <span class="count">4 Varianten</span></h2>
+    <p class="section-note">Drei komplett unterschiedliche Button-Sprachen im Einsatz: lab = textbasiert ohne Chrome, fontane = geometrisch mit Radius, fullerhome = scharfkantig (2px) mit Mono-Font. Für waffle lohnt sich eine Entscheidung: ghost bleibt vermutlich lab-artig, primary/secondary eher fontane-artig.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage"><a class="ex-btn ex-btn-ghost">Anonym Anmelden</a></div>
+        <div class="pat-meta">
+          <p class="pat-name">Ghost / Text-Button</p>
+          <p class="pat-spec">kein bg/border · mono 14px 700 · uppercase</p>
+          <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-btn ex-btn-primary">Primary</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Primary Button</p>
+          <p class="pat-spec">radius 6px · pad 8/16 · uppercase · ls .04em</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio (Konzept, an waffle-Farbe angepasst)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-btn ex-btn-secondary">Start</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Secondary / Bordered</p>
+          <p class="pat-spec">border 1px · radius 6px · pad 8/16</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <span class="ex-btn-toolbar"><span class="active">Draw</span><span class="idle">Brush</span><span class="idle">Erase</span></span>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Toolbar Segment Button</p>
+          <p class="pat-spec">active = filled blueberry/vanilla · radius 6px · pad 4/8</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tags" hidden>
+    <h2>Tags · Badges · Chips <span class="count">4 Varianten</span></h2>
+    <p class="section-note">Reines Text-Tag (lab), gefüllte Pille (fontane/fullerhome-Hybrid), Ribbon-Badge (fontane BETA), stille Meta-Caption (lab). Gute Kandidaten für ein gemeinsames <code>.tag</code>/<code>.badge</code>-Paar in waffle.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage dark"><span class="ex-tag-plain">minecraft, redstone, systeme</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Plain Tag (auf dunklem Card-Body)</p>
+          <p class="pat-spec">kein bg · mono 12px · color lemon</p>
+          <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-tag-pill">Kritischer Pfad</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Pill Tag</p>
+          <p class="pat-spec">radius 2px · pad 3/8 · getönter bg (10% accent)</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome (eigene Palette → waffle-grape)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-badge-ribbon">BETA</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Ribbon Badge</p>
+          <p class="pat-spec">solid lemon bg · bold · radius 3px</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-meta-caption">hacking · Level 1</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Meta Caption</p>
+          <p class="pat-spec">sans 11px · color muted, kein Chrome</p>
+          <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cards" hidden>
+    <h2>Cards <span class="count">3 Varianten</span></h2>
+    <p class="section-note">Media-Card mit dunklem Overlay-Body (lab), reine Border-Card ohne Bild (fullerhome), nummerierte Step-Card fürs Erklären von Prozessen (fullerhome-Takt). Alle 3 sind brauchbar für unterschiedliche Zwecke — kein Widerspruch, eher ein Set.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-media-card">
+            <div class="img"></div>
+            <div class="body">
+              <h4>Redstone-Bunker Teil 1</h4>
+              <div class="tags">hacking · Level 1</div>
+            </div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Media Card</p>
+          <p class="pat-spec">radius 4px · body pad 24px · overlay 85% blueberry</p>
+          <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-info-card">
+            <h4>Deutschland</h4>
+            <p>Sonderbau-Einordnung je nach Kuppelform und Bundesland unterschiedlich.</p>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Info / Border Card</p>
+          <p class="pat-spec">border 1px · pad 24-26px · kein radius</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-step-card">
+            <span class="idx">TAKT 02</span>
+            <h4>Genehmigungsplanung</h4>
+            <span class="tag">Kritischer Pfad</span>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Numbered Step Card</p>
+          <p class="pat-spec">im Raster mit 1px-Trennlinien wie eine Tabelle</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="nav" hidden>
+    <h2>Navigation <span class="count">2 Varianten</span></h2>
+    <p class="section-note">lab nutzt reinen Text mit Underline für aktiv; fullerhome nummeriert seine Sections (01, 02, ...) — passt gut zu CNSL-artigen mehrstufigen Tools.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <nav class="ex-nav"><a class="active">Übungen</a><a>Werkzeuge</a><a>Medien</a></nav>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Text Nav, active = underline</p>
+          <p class="pat-spec">mono 12px · opacity .7 idle / 1 active</p>
+          <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <nav class="ex-nav-numbered"><a><span class="num">01</span>Prozess</a><a><span class="num">02</span>Kosten</a></nav>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Numbered Section Nav</p>
+          <p class="pat-spec">Nummer in accent-Farbe vorangestellt</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="forms" hidden>
+    <h2>Forms &amp; Controls <span class="count">4 Varianten</span></h2>
+    <p class="section-note">Kommt komplett von fontane.studio — dort steckt der einzige echte Editor/Formular-Flow der drei Seiten (Character-Set-Auswahl, Slider-Settings, Modus-Tabs).</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div>
+            <div class="ex-checkbox-row"><input type="checkbox" checked> Latin Basic</div>
+            <div class="ex-checkbox-row" style="margin-top:8px"><input type="checkbox"> Symbols</div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Checkbox Row</p>
+          <p class="pat-spec">native checkbox · accent-color grape</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><input class="ex-slider" type="range" value="60"></div>
+        <div class="pat-meta">
+          <p class="pat-name">Slider / Range</p>
+          <p class="pat-spec">native input · accent-color grape</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <div class="ex-tabs"><span class="active">Grid</span><span class="idle">Free Draw</span><span class="idle">Editor</span></div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Segmented Tabs</p>
+          <p class="pat-spec">border-radius 6px am Container · active = vanilla</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-modal">
+            <h4>Choose your character sets</h4>
+            <p>Before you start drawing, pick which sets belong in this grid.</p>
+            <span class="ex-btn ex-btn-secondary">Start</span>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Modal / Dialog Panel</p>
+          <p class="pat-spec">border 1px blueberry · radius 8px · pad 24px</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="data" hidden>
+    <h2>Data Display <span class="count">3 Varianten</span></h2>
+    <p class="section-note">Alle drei kommen von fullerhome — das ist die einzige Seite mit Kosten-/Zeit-Daten. Nützlich, sobald CNSL mal Reports, Fortschrittsanzeigen oder Zeitleisten braucht (z.B. Scheduler, Backlog-Auswertung).</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <div class="ex-kpi-row"><span>Vorfertigung</span><span class="val">4,5 Wochen</span></div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">KPI Row</p>
+          <p class="pat-spec">flex space-between · mono · Wert in accent</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-progress"><div class="track"><div class="fill"></div></div></div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Progress Bar</p>
+          <p class="pat-spec">track cappuccino · fill grape · h 8px radius 4px</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-timeline">
+            <div class="item"><h5>Bauantrag eingereicht</h5><p>Woche 1</p></div>
+            <div class="item"><h5>Genehmigung erteilt</h5><p>Woche 6</p></div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Vertical Timeline</p>
+          <p class="pat-spec">2px linke Linie · Punkt-Marker in accent</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="layout" hidden>
+    <h2>Layout-Bausteine <span class="count">2 Varianten</span></h2>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage"><span class="ex-eyebrow">Robotische Kuppelfertigung</span></div>
+        <div class="pat-meta">
+          <p class="pat-name">Eyebrow / Kicker</p>
+          <p class="pat-spec">mono uppercase · kleiner Strich davor</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage"><div class="ex-sticky-header">Fontane.Studio — File · Edit · View · Tools</div></div>
+        <div class="pat-meta">
+          <p class="pat-name">Sticky Blur Header</p>
+          <p class="pat-spec">backdrop-filter blur(8px) · translucent bg</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="glass-cards" hidden>
+    <h2>Glass Cards &amp; Pill Buttons <span class="count">FullerHome, echtes Repo</span></h2>
+    <p class="section-note">Die tatsächliche Next.js-App (nicht die statische Design-Datei) fährt eine durchgängige eigene Sprache: durchscheinende weiße Cards (<code>rgba(255,255,255,.6-.78)</code>) mit 1px Border + 10-14px Radius, und Buttons als weiche Pills (16-24px Radius) statt der scharfkantigen 2px-Buttons aus der alten Design-Vorlage. Durchgängig: <code>accent-bg + on-accent-text</code> = „ausgewählt".</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-glass-card">
+            <div class="row"><span>Vorfertigung</span><span class="val">4,5 Wochen</span></div>
+            <div class="row"><span>Montage</span><span class="val">2 Wochen</span></div>
+            <div class="row total"><span>Gesamt</span><span class="val">6,5 Wochen</span></div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Glass Card / Datasheet</p>
+          <p class="pat-spec">bg rgba(255,255,255,.65) · border cappuccino · radius 12-14px · total-Zeile = accent-Chip</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome (Datasheet.module.css)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div><span class="ex-pill-primary">Simulation starten</span><span class="ex-pill-secondary">Zurücksetzen</span></div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Pill Primary / Secondary</p>
+          <p class="pat-spec">radius 24px · border 1.5px blueberry · primary = accent-bg</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome (BuildHUD.module.css)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-toggle-group"><span class="ex-toggle active">1×</span><span class="ex-toggle">2×</span><span class="ex-toggle">4×</span></div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Toggle-Group (Speed/Mode)</p>
+          <p class="pat-spec">radius 20px · border hazelnut · active = accent-bg</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <span class="ex-badge-accent" style="margin-right:8px;">Kritischer Pfad</span>
+          <span class="ex-chip-dashed">strategy · unentschieden</span>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Accent-Badge vs. Dashed Chip</p>
+          <p class="pat-spec">Badge = fest/wichtig (solid) · Chip = Pool/Auswahl-Kandidat (dashed, noch offen)</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome <span class="dot fontane" style="margin-left:8px"></span>spiritsprint</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tables" hidden>
+    <h2>Data Rows &amp; Tabellen <span class="count">2 Varianten</span></h2>
+    <p class="section-note">Beide Repos lösen „Label/Wert-Zeilen" gleich: flex space-between + Hairline-Border-Bottom, letzte/Total-Zeile hervorgehoben. spiritsprint hat zusätzlich eine echte <code>&lt;table&gt;</code> für Vergleichsdaten (Measures).</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage">
+          <table class="ex-table">
+            <thead><tr><th>Maßnahme</th><th>Aufwand</th><th>Wirkung</th></tr></thead>
+            <tbody>
+              <tr><td>Pull-Planning</td><td>niedrig</td><td>hoch</td></tr>
+              <tr><td>Taktplan</td><td>mittel</td><td>hoch</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Comparison Table</p>
+          <p class="pat-spec">th mono uppercase 10px muted · td border-bottom cappuccino</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (table.measures)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-glass-card" style="background:none;border:none;padding:0;">
+            <div class="row"><span>Standsicherheit</span><span class="val">geprüft</span></div>
+            <div class="row"><span>Brandschutz</span><span class="val">Sonderbau</span></div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Spec List (dt/dd-Paare)</p>
+          <p class="pat-spec">flex space-between · Wert rechtsbündig, tabular-nums</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome (Datasheet, CostStructure, PermitsSection — 3× dieselbe Zeile)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="app-shell" hidden>
+    <h2>App-Shell-Bausteine <span class="count">Spirit Sprint, komplexeste Quelle</span></h2>
+    <p class="section-note">Kein Landingpage-Material mehr, sondern echte Tool-UI: Sidebar-Navigation, 2-Achsen-Plot, Kanban-artiges Board mit Voting, Roadmap-Timeline, Branded-Export-Card. Größere Bausteine, keine Atome — eher Referenz für „wie baut man sowas", falls CNSL mal einen Multi-Step-Wizard oder ein Board braucht.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <div class="ex-rail">
+            <div class="brand">Spirit <span>Sprint</span></div>
+            <a class="step active">1. Soul</a>
+            <a class="step">2. Skills</a>
+            <a class="step">3. Strategy</a>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Sidebar Rail Nav</p>
+          <p class="pat-spec">sticky, volle Höhe, blueberry-bg · Schritte nummeriert, active = lemon-bg</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (.rail, .step)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-quad">
+            <span class="pin" style="left:30%;top:35%;">Wettbewerb A</span>
+            <span class="pin us" style="left:65%;top:60%;">Wir</span>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">2-Achsen-Plot (Positionierung)</p>
+          <p class="pat-spec">Grid mit Mittellinien · Pins als Pillen · eigene Position = accent</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (.quad, .pin)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-board">
+            <div class="col"><h5>Ideen</h5><div class="note">Community-Feature</div><div class="note kept">Onboarding fixen</div></div>
+            <div class="col"><h5>Geplant</h5><div class="note">Export als PDF</div></div>
+            <div class="col"><h5>Done</h5><div class="note">Login-Flow</div></div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Voting Board (Kanban-artig)</p>
+          <p class="pat-spec">Spalten-Grid · Notiz-Karten · „kept" = accent-bg + bold</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (.board, .note)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-road">
+            <div class="line"></div>
+            <div class="years">
+              <div class="year"><div class="dot"></div>2025</div>
+              <div class="year now"><div class="dot"></div>2026</div>
+              <div class="year"><div class="dot"></div>2027</div>
+            </div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Roadmap-Zeitleiste</p>
+          <p class="pat-spec">horizontale Linie · Jahres-Dots · „now" = accent, größer</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (.road, .year)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage">
+          <div class="ex-spirit-card">
+            <div class="eyebrow">Spirit Sprint Ergebnis</div>
+            <h4>Team Aisu</h4>
+            <div class="row"><span>Soul</span><span>Klarheit</span></div>
+            <div class="row"><span>Strategy</span><span>Nische zuerst</span></div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Branded Export Card</p>
+          <p class="pat-spec">fest blueberry/vanilla, unabhängig vom Seiten-Theme (bewusst „shareable artifact")</p>
+          <span class="origin"><span class="dot fontane"></span>spiritsprint (.spirit-card)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>github.com/AisuStudio/waffle · Quellen: <a href="https://lab.aisu.studio">lab.aisu.studio</a>, <a href="https://fontane.studio">fontane.studio</a>, <a href="https://github.com/AisuStudio/FullerHome">github.com/AisuStudio/FullerHome</a>, <a href="https://github.com/AisuStudio/spiritsprint">github.com/AisuStudio/spiritsprint</a> · siehe auch <a href="index.html">index.html</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabbtn'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+
+  function show(id) {
+    if (!sections.some(function (s) { return s.id === id; })) id = sections[0].id;
+    sections.forEach(function (s) { s.hidden = s.id !== id; });
+    tabs.forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
+    window.scrollTo(0, 0);
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      history.replaceState(null, '', '#' + t.dataset.tab);
+      show(t.dataset.tab);
+    });
+  });
+
+  show((location.hash || '#findings').slice(1));
+})();
+</script>
+
+</body>
+</html>

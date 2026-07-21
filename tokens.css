@@ -67,8 +67,14 @@
   --color-bg:       var(--color-vanilla);
   --color-surface:  var(--color-cappuccino);
   --color-text:     var(--color-blueberry);
-  --color-muted:    var(--color-hazelnut);
+  /* WCAG: hazelnut (#9e9c95) on vanilla is only 2.6:1 — darkened to ≥4.5:1.
+     Fix carried over from FullerHome's production globals.css. */
+  --color-muted:    #66655f;
   --color-accent:   var(--color-grape);
+  /* Text/icon color to use on top of --color-accent or --color-highlight
+     surfaces (active tabs, selected badges, total rows). Pattern observed
+     in FullerHome and spiritsprint: accent-bg is always paired with this. */
+  --color-on-accent:var(--color-blueberry);
   --color-highlight:var(--color-lemon);
 
   /* Spacing scale */

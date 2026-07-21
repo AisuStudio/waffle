@@ -148,7 +148,7 @@
       <div class="swatch" style="background:var(--color-hazelnut); color:var(--color-blueberry);">
         <input type="color" data-token="--color-hazelnut" data-hex="hex-hazelnut" value="#9e9c95" aria-label="Edit --color-hazelnut">
         <span class="nm">--color-hazelnut</span>
-        <span class="hex" id="hex-hazelnut">#9e9c95 · muted text</span>
+        <span class="hex" id="hex-hazelnut">#9e9c95 · borders, dividers, disabled</span>
       </div>
       <div class="swatch" style="background:var(--color-cappuccino); color:var(--color-blueberry);">
         <input type="color" data-token="--color-cappuccino" data-hex="hex-cappuccino" value="#d9d7ce" aria-label="Edit --color-cappuccino">
@@ -248,7 +248,7 @@
     '--color-blueberry': 'ink, primary text',
     '--color-grape': 'accent, links',
     '--color-lemon': 'highlight',
-    '--color-hazelnut': 'muted text',
+    '--color-hazelnut': 'borders, dividers, disabled',
     '--color-cappuccino': 'surface / card bg',
     '--color-vanilla': 'page bg'
   };
@@ -303,7 +303,7 @@
       '  --color-blueberry: ' + currentValue('--color-blueberry') + ';   /* ink */',
       '  --color-grape:     ' + currentValue('--color-grape') + ';   /* accent, links */',
       '  --color-lemon:     ' + currentValue('--color-lemon') + ';   /* highlight */',
-      '  --color-hazelnut:  ' + currentValue('--color-hazelnut') + ';   /* muted secondary text */',
+      '  --color-hazelnut:  ' + currentValue('--color-hazelnut') + ';   /* borders, dividers, disabled */',
       '  --color-cappuccino:' + currentValue('--color-cappuccino') + ';   /* card / container background */',
       '  --color-vanilla:   ' + currentValue('--color-vanilla') + ';   /* page background */',
       '',
@@ -311,8 +311,10 @@
       '  --color-bg:       var(--color-vanilla);',
       '  --color-surface:  var(--color-cappuccino);',
       '  --color-text:     var(--color-blueberry);',
-      '  --color-muted:    var(--color-hazelnut);',
+      '  /* WCAG: hazelnut on vanilla is only 2.6:1 — fixed value, not derived from the swatch above */',
+      '  --color-muted:    #66655f;',
       '  --color-accent:   var(--color-grape);',
+      '  --color-on-accent:var(--color-blueberry);',
       '  --color-highlight:var(--color-lemon);',
       '',
       '  /* Spacing scale */',
