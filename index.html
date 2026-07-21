@@ -20,6 +20,9 @@
 
   header { padding: var(--sp-2xl) 0 var(--sp-xl); }
   header p { color: var(--color-muted); margin: var(--sp-sm) 0 0; }
+  .page-nav { display: flex; gap: var(--sp-md); margin-top: var(--sp-md); font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .page-nav a { color: var(--color-muted); text-decoration: none; }
+  .page-nav a.current { color: var(--color-text); font-weight: 700; text-decoration: underline; }
   h1 {
     font-family: var(--font-mono);
     font-weight: 700;
@@ -124,6 +127,10 @@
   <header>
     <h1>waffle</h1>
     <p>Shared design tokens for Aisu.Studio projects — the base every new build starts from.</p>
+    <nav class="page-nav">
+      <a class="current" href="index.html">Tokens</a>
+      <a href="patterns.html">Patterns</a>
+    </nav>
   </header>
 
   <section>
