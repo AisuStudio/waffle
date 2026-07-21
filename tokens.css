@@ -71,11 +71,15 @@
      Fix carried over from FullerHome's production globals.css. */
   --color-muted:    #66655f;
   --color-accent:   var(--color-grape);
-  /* Text/icon color to use on top of --color-accent or --color-highlight
-     surfaces (active tabs, selected badges, total rows). Pattern observed
-     in FullerHome and spiritsprint: accent-bg is always paired with this. */
-  --color-on-accent:var(--color-blueberry);
   --color-highlight:var(--color-lemon);
+  /* Text/icon color for on top of --color-highlight (lemon) surfaces —
+     active tabs, selected badges, total rows. 14.6:1 contrast on lemon.
+     Do NOT use this on --color-accent (grape): only 2.24:1 there, fails
+     WCAG AA. Grape surfaces pair with --color-vanilla text instead (6.13:1),
+     same as the primary-button pattern below. Naming/pairing observed in
+     FullerHome and spiritsprint, where their "accent" token = waffle's
+     --color-highlight, not --color-accent. */
+  --color-on-accent:var(--color-blueberry);
 
   /* Spacing scale */
   --sp-xs:  0.25rem;

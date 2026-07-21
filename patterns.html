@@ -44,7 +44,10 @@
     padding: 7px 14px; cursor: pointer;
   }
   .tabbtn:hover { color: var(--color-text); border-color: var(--color-cappuccino); }
-  .tabbtn.active { background: var(--color-accent); color: var(--color-on-accent); font-weight: 700; }
+  /* --color-on-accent (blueberry) is only validated against light surfaces
+     like --color-highlight — on grape it's 2.24:1 contrast, way under AA.
+     Vanilla-on-grape is 6.13:1, same pairing the buttons below already use. */
+  .tabbtn.active { background: var(--color-accent); color: var(--color-vanilla); font-weight: 700; }
 
   /* pattern grid */
   .pat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-lg); }
