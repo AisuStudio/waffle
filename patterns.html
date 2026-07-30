@@ -206,6 +206,22 @@
   .ex-spirit-card .eyebrow { color: var(--color-lemon); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
   .ex-spirit-card h4 { font-size: 15px; margin: 0 0 10px; }
   .ex-spirit-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.12); font-size: 11px; }
+
+  /* --- onboarding & guidance (fontane, 2026-07-30 first-time-UX pass) --- */
+  .ex-collapsible { width: 100%; font-family: var(--font-sans); }
+  .ex-collapsible .head { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--color-vanilla); }
+  .ex-collapsible .head + .head { margin-top: 8px; }
+  .ex-collapsible .chev { color: var(--color-vanilla); opacity: .7; width: 10px; display: inline-block; }
+  .ex-collapsible .body { padding: 6px 0 4px 16px; font-size: 12px; color: rgba(234,232,224,.75); }
+  .ex-collapsible .head.closed { opacity: .75; }
+
+  .ex-coachmark { position: relative; width: 100%; height: 100%; min-height: 120px; }
+  .ex-coachmark .dim { position: absolute; inset: 0; background: rgba(0,0,0,.55); }
+  .ex-coachmark .spot { position: absolute; top: 14px; left: 14px; width: 72px; height: 20px; border-radius: 4px; outline: 2px solid var(--color-lemon); background: var(--color-blueberry); }
+  .ex-coachmark .callout { position: absolute; top: 44px; left: 14px; width: 152px; background: var(--color-vanilla); color: var(--color-blueberry); border-radius: 6px; padding: 8px 10px; }
+  .ex-coachmark .callout .step { font-family: var(--font-mono); font-size: 9px; color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+  .ex-coachmark .callout .title { font-weight: 700; font-size: 11px; margin-bottom: 4px; }
+  .ex-coachmark .callout .next { display: inline-block; margin-top: 2px; border: 1px solid var(--color-blueberry); border-radius: 4px; padding: 2px 8px; font-family: var(--font-mono); font-size: 9px; }
 </style>
 </head>
 <body>
@@ -232,6 +248,7 @@
     <button class="tabbtn" data-tab="glass-cards">Glass Cards</button>
     <button class="tabbtn" data-tab="tables">Tabellen</button>
     <button class="tabbtn" data-tab="app-shell">App-Shell</button>
+    <button class="tabbtn" data-tab="onboarding">Onboarding</button>
   </nav>
 
   <section id="findings">
@@ -696,6 +713,45 @@
           <p class="pat-name">Branded Export Card</p>
           <p class="pat-spec">fest blueberry/vanilla, unabhängig vom Seiten-Theme (bewusst „shareable artifact")</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.spirit-card)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="onboarding" hidden>
+    <h2>Onboarding &amp; Guidance <span class="count">2 Varianten</span></h2>
+    <p class="section-note">Aus fontanes Erststart-Überarbeitung (2026-07-30): das Settings-Panel öffnet nicht mehr alles auf einmal, und ein neuer Nutzer bekommt eine geführte Tour statt einer Wall of Jargon vor dem ersten Klick.</p>
+    <div class="pat-grid">
+      <div class="pat-card">
+        <div class="pat-stage dark">
+          <div class="ex-collapsible">
+            <div class="head"><span class="chev">▼</span>Metrics</div>
+            <div class="body">Ascender · Baseline · Descender</div>
+            <div class="head closed"><span class="chev">▶</span>Stroke</div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Collapsible Section</p>
+          <p class="pat-spec">Chevron + Titel als Header · Zustand pro Sektion in localStorage persistiert · Titel bleibt auch zu sichtbar</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio (SettingsSection.tsx)</span>
+        </div>
+      </div>
+      <div class="pat-card">
+        <div class="pat-stage dark" style="padding:0;">
+          <div class="ex-coachmark">
+            <div class="dim"></div>
+            <div class="spot"></div>
+            <div class="callout">
+              <div class="step">3 / 8</div>
+              <div class="title">Your drawing tools</div>
+              <span class="next">Next</span>
+            </div>
+          </div>
+        </div>
+        <div class="pat-meta">
+          <p class="pat-name">Coach Marks / Guided Tour</p>
+          <p class="pat-spec">Vier Dimm-Balken statt Box-Shadow-Spread (rendert zuverlässiger) + Lemon-Ring ums Ziel · Callout klappt bei Randnähe um</p>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio (CoachMarks.tsx)</span>
         </div>
       </div>
     </div>
