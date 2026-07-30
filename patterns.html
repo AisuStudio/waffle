@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>waffle — pattern quarry</title>
@@ -32,6 +32,19 @@
   .section-note { color: var(--color-muted); font-size: 13px; margin: 0 0 var(--sp-lg); max-width: 68ch; }
   section { padding: var(--sp-xl) 0; }
   section[hidden] { display: none; }
+
+  .wip-note {
+    display: flex; align-items: baseline; gap: var(--sp-sm);
+    border: 1px solid var(--color-hazelnut); border-radius: 6px;
+    background: var(--color-cappuccino); padding: var(--sp-sm) var(--sp-lg);
+    margin: 0 0 var(--sp-lg); max-width: 68ch;
+  }
+  .wip-note .tag {
+    flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--color-blueberry);
+    background: var(--color-lemon); padding: 2px 8px; border-radius: 3px;
+  }
+  .wip-note p { margin: 0; font-size: 13px; color: var(--color-muted); }
 
   /* tab bar */
   .tabbar {
@@ -229,15 +242,20 @@
 <div class="container">
   <header class="page">
     <h1>waffle / patterns</h1>
-    <p>UI-Muster gesammelt aus lab.aisu.studio, fontane.studio (live), AisuStudio/FullerHome und AisuStudio/spiritsprint (echte Repos) — nach Component sortiert, in waffle-Tokens übersetzt. Nichts hier ist final; das ist die Auswahl-Basis für eine spätere richtige <code>components.css</code>.</p>
+    <p>UI patterns collected from lab.aisu.studio, fontane.studio (live), AisuStudio/FullerHome, and AisuStudio/spiritsprint (real repos) — sorted by component, translated into waffle tokens. Nothing here is final; this is the shortlist for a proper <code>components.css</code> later.</p>
     <nav class="page-nav">
       <a href="index.html">Tokens</a>
       <a class="current" href="patterns.html">Patterns</a>
     </nav>
   </header>
 
+  <div class="wip-note">
+    <span class="tag">Work in progress</span>
+    <p>waffle is still being built out. Tokens are stable and safe to use; everything on this page is a quarry of extracted examples, not a finished component library — expect gaps, rough edges, and breaking changes without notice.</p>
+  </div>
+
   <nav class="tabbar" id="tabbar">
-    <button class="tabbtn" data-tab="findings">Befund</button>
+    <button class="tabbtn" data-tab="findings">Findings</button>
     <button class="tabbtn" data-tab="buttons">Buttons</button>
     <button class="tabbtn" data-tab="tags">Tags &amp; Badges</button>
     <button class="tabbtn" data-tab="cards">Cards</button>
@@ -246,47 +264,47 @@
     <button class="tabbtn" data-tab="data">Data Display</button>
     <button class="tabbtn" data-tab="layout">Layout</button>
     <button class="tabbtn" data-tab="glass-cards">Glass Cards</button>
-    <button class="tabbtn" data-tab="tables">Tabellen</button>
+    <button class="tabbtn" data-tab="tables">Tables</button>
     <button class="tabbtn" data-tab="app-shell">App-Shell</button>
     <button class="tabbtn" data-tab="onboarding">Onboarding</button>
   </nav>
 
   <section id="findings">
-    <h2>Befund: Token-Ebene <span class="count">wichtiger als jedes einzelne Pattern</span></h2>
-    <p class="section-note">Nachtrag nach Durchsicht der echten Repos (AisuStudio/FullerHome, AisuStudio/spiritsprint statt nur der lokalen Design-Datei). Der wertvollste Fund ist nicht ein neues Component — es sind drei bereits gelöste Probleme, die waffle noch nicht hat.</p>
+    <h2>Findings: token layer <span class="count">matters more than any single pattern</span></h2>
+    <p class="section-note">Added after reviewing the real repos (AisuStudio/FullerHome, AisuStudio/spiritsprint, not just the local design file). The most valuable find isn't a new component — it's three problems those repos already solved that waffle doesn't have yet.</p>
     <div class="finding-grid">
       <div class="finding-card">
-        <h3>1. aisukurimu-tokens.css ist bereits dein components.css</h3>
-        <p>lab.aisu.studio und spiritsprint nutzen beide dieselbe Utility-Class-Schicht aus <code>github.com/AisuStudio/aisukurimu</code>: <code>.nav-item</code>, <code>.tag</code>, <code>.eyebrow</code>, <code>.link-big</code>, <code>.caption</code>, <code>.h1-vanilla</code>, <code>.container</code>, <code>.hr</code> — exakt die Typo/Nav-Bausteine, die ich unten aus dem DOM nachgebaut habe.</p>
-        <p class="rec">→ Statt Patterns neu zu erfinden: aisukurimu-tokens.css nach waffle holen (oder waffle darauf aufbauen lassen).</p>
+        <h3>1. aisukurimu-tokens.css is already your components.css</h3>
+        <p>lab.aisu.studio and spiritsprint both use the same utility-class layer from <code>github.com/AisuStudio/aisukurimu</code>: <code>.nav-item</code>, <code>.tag</code>, <code>.eyebrow</code>, <code>.link-big</code>, <code>.caption</code>, <code>.h1-vanilla</code>, <code>.container</code>, <code>.hr</code> — exactly the type/nav building blocks rebuilt from the DOM below.</p>
+        <p class="rec">→ Instead of reinventing patterns: pull aisukurimu-tokens.css into waffle (or build waffle on top of it).</p>
       </div>
       <div class="finding-card">
-        <h3>2. --color-muted ist in waffle nicht WCAG-konform</h3>
-        <p>FullerHomes <code>globals.css</code> hat denselben Token-Satz wie waffle, aber mit Kommentar: <code>--color-muted: #66655f</code> statt Hazelnut <code>#9e9c95</code> — „#93928e auf Vanilla ist nur 2.6:1 Kontrast, auf ≥4.5:1 abgedunkelt". Das ist ein echter Accessibility-Fix, kein Geschmacksunterschied.</p>
-        <p class="rec">→ Sollte 1:1 zurück in waffles tokens.css.</p>
+        <h3>2. --color-muted isn't WCAG-compliant in waffle</h3>
+        <p>FullerHome's <code>globals.css</code> has the same token set as waffle, but with a comment: <code>--color-muted: #66655f</code> instead of hazelnut <code>#9e9c95</code> — "#93928e on vanilla is only 2.6:1 contrast, darkened to ≥4.5:1". That's a real accessibility fix, not a taste difference.</p>
+        <p class="rec">→ Should go straight back into waffle's tokens.css.</p>
       </div>
       <div class="finding-card">
-        <h3>3. Fehlendes Paar: --color-on-accent</h3>
-        <p>FullerHome und spiritsprint nutzen konsequent <code>accent-bg + on-accent-text</code> als Signal für „aktiv/ausgewählt/hervorgehoben" (Tabs, Toggles, Badges, Chips, Totals). Waffle hat <code>--color-accent</code>, aber keinen definierten Gegenpart.</p>
-        <p class="rec">→ <code>--color-on-accent: var(--color-blueberry)</code> ergänzen; macht das Semantic-Pairing explizit statt implizit.</p>
+        <h3>3. Missing pair: --color-on-accent</h3>
+        <p>FullerHome and spiritsprint both consistently use <code>accent-bg + on-accent-text</code> as the signal for "active/selected/highlighted" (tabs, toggles, badges, chips, totals). Waffle has <code>--color-accent</code>, but no defined counterpart.</p>
+        <p class="rec">→ Add <code>--color-on-accent: var(--color-blueberry)</code>; makes the semantic pairing explicit instead of implicit.</p>
       </div>
       <div class="finding-card">
-        <h3>4. spiritsprint hat schon Dark Mode</h3>
-        <p>Komplettes Set <code>--bg/--surface/--surface-2/--ink/--muted/--accent/--highlight/--border</code>, definiert doppelt: über <code>prefers-color-scheme</code> und <code>[data-theme]</code>-Override. Im Dark Mode wird <code>--accent</code> zu einem helleren Violett (<code>#b298ff</code>), nicht 1:1 Grape — sonst zu dunkel auf dunklem Grund.</p>
-        <p class="rec">→ Falls waffle mal Dark Mode braucht: dieses Muster übernehmen statt neu entwerfen.</p>
+        <h3>4. spiritsprint already has dark mode</h3>
+        <p>A full set — <code>--bg/--surface/--surface-2/--ink/--muted/--accent/--highlight/--border</code> — defined twice: via <code>prefers-color-scheme</code> and a <code>[data-theme]</code> override. In dark mode, <code>--accent</code> becomes a lighter violet (<code>#b298ff</code>), not grape 1:1 — otherwise too dark on a dark background.</p>
+        <p class="rec">→ If waffle ever needs dark mode: reuse this pattern instead of designing a new one.</p>
       </div>
     </div>
   </section>
 
   <section id="buttons" hidden>
-    <h2>Buttons <span class="count">4 Varianten</span></h2>
-    <p class="section-note">Drei komplett unterschiedliche Button-Sprachen im Einsatz: lab = textbasiert ohne Chrome, fontane = geometrisch mit Radius, fullerhome = scharfkantig (2px) mit Mono-Font. Für waffle lohnt sich eine Entscheidung: ghost bleibt vermutlich lab-artig, primary/secondary eher fontane-artig.</p>
+    <h2>Buttons <span class="count">4 variants</span></h2>
+    <p class="section-note">Three completely different button languages in use: lab = text-based, no chrome; fontane = geometric with radius; fullerhome = sharp-edged (2px) with a mono font. Worth a real decision for waffle: ghost probably stays lab-like, primary/secondary lean fontane-like.</p>
     <div class="pat-grid">
       <div class="pat-card">
-        <div class="pat-stage"><a class="ex-btn ex-btn-ghost">Anonym Anmelden</a></div>
+        <div class="pat-stage"><a class="ex-btn ex-btn-ghost">Sign In Anonymously</a></div>
         <div class="pat-meta">
           <p class="pat-name">Ghost / Text-Button</p>
-          <p class="pat-spec">kein bg/border · mono 14px 700 · uppercase</p>
+          <p class="pat-spec">no bg/border · mono 14px 700 · uppercase</p>
           <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
         </div>
       </div>
@@ -295,7 +313,7 @@
         <div class="pat-meta">
           <p class="pat-name">Primary Button</p>
           <p class="pat-spec">radius 6px · pad 8/16 · uppercase · ls .04em</p>
-          <span class="origin"><span class="dot fontane"></span>fontane.studio (Konzept, an waffle-Farbe angepasst)</span>
+          <span class="origin"><span class="dot fontane"></span>fontane.studio (concept, adapted to waffle color)</span>
         </div>
       </div>
       <div class="pat-card">
@@ -320,23 +338,23 @@
   </section>
 
   <section id="tags" hidden>
-    <h2>Tags · Badges · Chips <span class="count">4 Varianten</span></h2>
-    <p class="section-note">Reines Text-Tag (lab), gefüllte Pille (fontane/fullerhome-Hybrid), Ribbon-Badge (fontane BETA), stille Meta-Caption (lab). Gute Kandidaten für ein gemeinsames <code>.tag</code>/<code>.badge</code>-Paar in waffle.</p>
+    <h2>Tags · Badges · Chips <span class="count">4 variants</span></h2>
+    <p class="section-note">Plain text tag (lab), filled pill (fontane/fullerhome hybrid), ribbon badge (fontane BETA), quiet meta caption (lab). Good candidates for a shared <code>.tag</code>/<code>.badge</code> pair in waffle.</p>
     <div class="pat-grid">
       <div class="pat-card">
-        <div class="pat-stage dark"><span class="ex-tag-plain">minecraft, redstone, systeme</span></div>
+        <div class="pat-stage dark"><span class="ex-tag-plain">minecraft, redstone, systems</span></div>
         <div class="pat-meta">
-          <p class="pat-name">Plain Tag (auf dunklem Card-Body)</p>
-          <p class="pat-spec">kein bg · mono 12px · color lemon</p>
+          <p class="pat-name">Plain Tag (on a dark card body)</p>
+          <p class="pat-spec">no bg · mono 12px · color lemon</p>
           <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
         </div>
       </div>
       <div class="pat-card">
-        <div class="pat-stage"><span class="ex-tag-pill">Kritischer Pfad</span></div>
+        <div class="pat-stage"><span class="ex-tag-pill">Critical Path</span></div>
         <div class="pat-meta">
           <p class="pat-name">Pill Tag</p>
-          <p class="pat-spec">radius 2px · pad 3/8 · getönter bg (10% accent)</p>
-          <span class="origin"><span class="dot fuller"></span>fullerhome (eigene Palette → waffle-grape)</span>
+          <p class="pat-spec">radius 2px · pad 3/8 · tinted bg (10% accent)</p>
+          <span class="origin"><span class="dot fuller"></span>fullerhome (own palette → waffle grape)</span>
         </div>
       </div>
       <div class="pat-card">
@@ -351,7 +369,7 @@
         <div class="pat-stage"><span class="ex-meta-caption">hacking · Level 1</span></div>
         <div class="pat-meta">
           <p class="pat-name">Meta Caption</p>
-          <p class="pat-spec">sans 11px · color muted, kein Chrome</p>
+          <p class="pat-spec">sans 11px · color muted, no chrome</p>
           <span class="origin"><span class="dot lab"></span>lab.aisu.studio</span>
         </div>
       </div>
@@ -359,15 +377,15 @@
   </section>
 
   <section id="cards" hidden>
-    <h2>Cards <span class="count">3 Varianten</span></h2>
-    <p class="section-note">Media-Card mit dunklem Overlay-Body (lab), reine Border-Card ohne Bild (fullerhome), nummerierte Step-Card fürs Erklären von Prozessen (fullerhome-Takt). Alle 3 sind brauchbar für unterschiedliche Zwecke — kein Widerspruch, eher ein Set.</p>
+    <h2>Cards <span class="count">3 variants</span></h2>
+    <p class="section-note">Media card with a dark overlay body (lab), plain border card with no image (fullerhome), numbered step card for explaining processes (fullerhome takt). All three are useful for different purposes — not a conflict, more of a set.</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-media-card">
             <div class="img"></div>
             <div class="body">
-              <h4>Redstone-Bunker Teil 1</h4>
+              <h4>Redstone Bunker Part 1</h4>
               <div class="tags">hacking · Level 1</div>
             </div>
           </div>
@@ -381,13 +399,13 @@
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-info-card">
-            <h4>Deutschland</h4>
-            <p>Sonderbau-Einordnung je nach Kuppelform und Bundesland unterschiedlich.</p>
+            <h4>Germany</h4>
+            <p>Special-structure classification varies by dome shape and federal state.</p>
           </div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Info / Border Card</p>
-          <p class="pat-spec">border 1px · pad 24-26px · kein radius</p>
+          <p class="pat-spec">border 1px · pad 24-26px · no radius</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -395,13 +413,13 @@
         <div class="pat-stage">
           <div class="ex-step-card">
             <span class="idx">TAKT 02</span>
-            <h4>Genehmigungsplanung</h4>
-            <span class="tag">Kritischer Pfad</span>
+            <h4>Permit Planning</h4>
+            <span class="tag">Critical Path</span>
           </div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Numbered Step Card</p>
-          <p class="pat-spec">im Raster mit 1px-Trennlinien wie eine Tabelle</p>
+          <p class="pat-spec">in a grid with 1px dividers, like a table</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -409,12 +427,12 @@
   </section>
 
   <section id="nav" hidden>
-    <h2>Navigation <span class="count">2 Varianten</span></h2>
-    <p class="section-note">lab nutzt reinen Text mit Underline für aktiv; fullerhome nummeriert seine Sections (01, 02, ...) — passt gut zu CNSL-artigen mehrstufigen Tools.</p>
+    <h2>Navigation <span class="count">2 variants</span></h2>
+    <p class="section-note">lab uses plain text with an underline for active; fullerhome numbers its sections (01, 02, ...) — fits well for CNSL-style multi-step tools.</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage dark">
-          <nav class="ex-nav"><a class="active">Übungen</a><a>Werkzeuge</a><a>Medien</a></nav>
+          <nav class="ex-nav"><a class="active">Exercises</a><a>Tools</a><a>Media</a></nav>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Text Nav, active = underline</p>
@@ -424,11 +442,11 @@
       </div>
       <div class="pat-card">
         <div class="pat-stage dark">
-          <nav class="ex-nav-numbered"><a><span class="num">01</span>Prozess</a><a><span class="num">02</span>Kosten</a></nav>
+          <nav class="ex-nav-numbered"><a><span class="num">01</span>Process</a><a><span class="num">02</span>Cost</a></nav>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Numbered Section Nav</p>
-          <p class="pat-spec">Nummer in accent-Farbe vorangestellt</p>
+          <p class="pat-spec">number prefixed in accent color</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -436,8 +454,8 @@
   </section>
 
   <section id="forms" hidden>
-    <h2>Forms &amp; Controls <span class="count">4 Varianten</span></h2>
-    <p class="section-note">Kommt komplett von fontane.studio — dort steckt der einzige echte Editor/Formular-Flow der drei Seiten (Character-Set-Auswahl, Slider-Settings, Modus-Tabs).</p>
+    <h2>Forms &amp; Controls <span class="count">4 variants</span></h2>
+    <p class="section-note">Comes entirely from fontane.studio — the only one of the three sites with a real editor/form flow (character-set picker, slider settings, mode tabs).</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage">
@@ -466,7 +484,7 @@
         </div>
         <div class="pat-meta">
           <p class="pat-name">Segmented Tabs</p>
-          <p class="pat-spec">border-radius 6px am Container · active = vanilla</p>
+          <p class="pat-spec">border-radius 6px on the container · active = vanilla</p>
           <span class="origin"><span class="dot fontane"></span>fontane.studio</span>
         </div>
       </div>
@@ -488,16 +506,16 @@
   </section>
 
   <section id="data" hidden>
-    <h2>Data Display <span class="count">3 Varianten</span></h2>
-    <p class="section-note">Alle drei kommen von fullerhome — das ist die einzige Seite mit Kosten-/Zeit-Daten. Nützlich, sobald CNSL mal Reports, Fortschrittsanzeigen oder Zeitleisten braucht (z.B. Scheduler, Backlog-Auswertung).</p>
+    <h2>Data Display <span class="count">3 variants</span></h2>
+    <p class="section-note">All three come from fullerhome — the only site with cost/time data. Useful once CNSL ever needs reports, progress indicators, or timelines (e.g. Scheduler, backlog analysis).</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage dark">
-          <div class="ex-kpi-row"><span>Vorfertigung</span><span class="val">4,5 Wochen</span></div>
+          <div class="ex-kpi-row"><span>Prefabrication</span><span class="val">4.5 weeks</span></div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">KPI Row</p>
-          <p class="pat-spec">flex space-between · mono · Wert in accent</p>
+          <p class="pat-spec">flex space-between · mono · value in accent</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -514,13 +532,13 @@
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-timeline">
-            <div class="item"><h5>Bauantrag eingereicht</h5><p>Woche 1</p></div>
-            <div class="item"><h5>Genehmigung erteilt</h5><p>Woche 6</p></div>
+            <div class="item"><h5>Building permit filed</h5><p>Week 1</p></div>
+            <div class="item"><h5>Permit granted</h5><p>Week 6</p></div>
           </div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Vertical Timeline</p>
-          <p class="pat-spec">2px linke Linie · Punkt-Marker in accent</p>
+          <p class="pat-spec">2px left line · dot marker in accent</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -528,13 +546,13 @@
   </section>
 
   <section id="layout" hidden>
-    <h2>Layout-Bausteine <span class="count">2 Varianten</span></h2>
+    <h2>Layout Building Blocks <span class="count">2 variants</span></h2>
     <div class="pat-grid">
       <div class="pat-card">
-        <div class="pat-stage"><span class="ex-eyebrow">Robotische Kuppelfertigung</span></div>
+        <div class="pat-stage"><span class="ex-eyebrow">Robotic Dome Fabrication</span></div>
         <div class="pat-meta">
           <p class="pat-name">Eyebrow / Kicker</p>
-          <p class="pat-spec">mono uppercase · kleiner Strich davor</p>
+          <p class="pat-spec">mono uppercase · small dash before it</p>
           <span class="origin"><span class="dot fuller"></span>fullerhome</span>
         </div>
       </div>
@@ -550,26 +568,26 @@
   </section>
 
   <section id="glass-cards" hidden>
-    <h2>Glass Cards &amp; Pill Buttons <span class="count">FullerHome, echtes Repo</span></h2>
-    <p class="section-note">Die tatsächliche Next.js-App (nicht die statische Design-Datei) fährt eine durchgängige eigene Sprache: durchscheinende weiße Cards (<code>rgba(255,255,255,.6-.78)</code>) mit 1px Border + 10-14px Radius, und Buttons als weiche Pills (16-24px Radius) statt der scharfkantigen 2px-Buttons aus der alten Design-Vorlage. Durchgängig: <code>accent-bg + on-accent-text</code> = „ausgewählt".</p>
+    <h2>Glass Cards &amp; Pill Buttons <span class="count">FullerHome, real repo</span></h2>
+    <p class="section-note">The actual Next.js app (not the static design file) runs its own consistent language: translucent white cards (<code>rgba(255,255,255,.6-.78)</code>) with a 1px border + 10-14px radius, and buttons as soft pills (16-24px radius) instead of the sharp-edged 2px buttons from the old design template. Consistent throughout: <code>accent-bg + on-accent-text</code> = "selected".</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-glass-card">
-            <div class="row"><span>Vorfertigung</span><span class="val">4,5 Wochen</span></div>
-            <div class="row"><span>Montage</span><span class="val">2 Wochen</span></div>
-            <div class="row total"><span>Gesamt</span><span class="val">6,5 Wochen</span></div>
+            <div class="row"><span>Prefabrication</span><span class="val">4.5 weeks</span></div>
+            <div class="row"><span>Assembly</span><span class="val">2 weeks</span></div>
+            <div class="row total"><span>Total</span><span class="val">6.5 weeks</span></div>
           </div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Glass Card / Datasheet</p>
-          <p class="pat-spec">bg rgba(255,255,255,.65) · border cappuccino · radius 12-14px · total-Zeile = accent-Chip</p>
+          <p class="pat-spec">bg rgba(255,255,255,.65) · border cappuccino · radius 12-14px · total row = accent chip</p>
           <span class="origin"><span class="dot fuller"></span>FullerHome (Datasheet.module.css)</span>
         </div>
       </div>
       <div class="pat-card">
         <div class="pat-stage">
-          <div><span class="ex-pill-primary">Simulation starten</span><span class="ex-pill-secondary">Zurücksetzen</span></div>
+          <div><span class="ex-pill-primary">Start Simulation</span><span class="ex-pill-secondary">Reset</span></div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Pill Primary / Secondary</p>
@@ -589,12 +607,12 @@
       </div>
       <div class="pat-card">
         <div class="pat-stage">
-          <span class="ex-badge-accent" style="margin-right:8px;">Kritischer Pfad</span>
-          <span class="ex-chip-dashed">strategy · unentschieden</span>
+          <span class="ex-badge-accent" style="margin-right:8px;">Critical Path</span>
+          <span class="ex-chip-dashed">strategy · undecided</span>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Accent-Badge vs. Dashed Chip</p>
-          <p class="pat-spec">Badge = fest/wichtig (solid) · Chip = Pool/Auswahl-Kandidat (dashed, noch offen)</p>
+          <p class="pat-spec">Badge = fixed/important (solid) · Chip = pool/candidate (dashed, still open)</p>
           <span class="origin"><span class="dot fuller"></span>FullerHome <span class="dot fontane" style="margin-left:8px"></span>spiritsprint</span>
         </div>
       </div>
@@ -602,16 +620,16 @@
   </section>
 
   <section id="tables" hidden>
-    <h2>Data Rows &amp; Tabellen <span class="count">2 Varianten</span></h2>
-    <p class="section-note">Beide Repos lösen „Label/Wert-Zeilen" gleich: flex space-between + Hairline-Border-Bottom, letzte/Total-Zeile hervorgehoben. spiritsprint hat zusätzlich eine echte <code>&lt;table&gt;</code> für Vergleichsdaten (Measures).</p>
+    <h2>Data Rows &amp; Tables <span class="count">2 variants</span></h2>
+    <p class="section-note">Both repos solve "label/value rows" the same way: flex space-between + a hairline bottom border, with the last/total row highlighted. spiritsprint also has a real <code>&lt;table&gt;</code> for comparison data (measures).</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage">
           <table class="ex-table">
-            <thead><tr><th>Maßnahme</th><th>Aufwand</th><th>Wirkung</th></tr></thead>
+            <thead><tr><th>Measure</th><th>Effort</th><th>Impact</th></tr></thead>
             <tbody>
-              <tr><td>Pull-Planning</td><td>niedrig</td><td>hoch</td></tr>
-              <tr><td>Taktplan</td><td>mittel</td><td>hoch</td></tr>
+              <tr><td>Pull Planning</td><td>low</td><td>high</td></tr>
+              <tr><td>Takt Plan</td><td>medium</td><td>high</td></tr>
             </tbody>
           </table>
         </div>
@@ -624,22 +642,22 @@
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-glass-card" style="background:none;border:none;padding:0;">
-            <div class="row"><span>Standsicherheit</span><span class="val">geprüft</span></div>
-            <div class="row"><span>Brandschutz</span><span class="val">Sonderbau</span></div>
+            <div class="row"><span>Structural stability</span><span class="val">checked</span></div>
+            <div class="row"><span>Fire safety</span><span class="val">special structure</span></div>
           </div>
         </div>
         <div class="pat-meta">
-          <p class="pat-name">Spec List (dt/dd-Paare)</p>
-          <p class="pat-spec">flex space-between · Wert rechtsbündig, tabular-nums</p>
-          <span class="origin"><span class="dot fuller"></span>FullerHome (Datasheet, CostStructure, PermitsSection — 3× dieselbe Zeile)</span>
+          <p class="pat-name">Spec List (dt/dd pairs)</p>
+          <p class="pat-spec">flex space-between · value right-aligned, tabular-nums</p>
+          <span class="origin"><span class="dot fuller"></span>FullerHome (Datasheet, CostStructure, PermitsSection — same row 3×)</span>
         </div>
       </div>
     </div>
   </section>
 
   <section id="app-shell" hidden>
-    <h2>App-Shell-Bausteine <span class="count">Spirit Sprint, komplexeste Quelle</span></h2>
-    <p class="section-note">Kein Landingpage-Material mehr, sondern echte Tool-UI: Sidebar-Navigation, 2-Achsen-Plot, Kanban-artiges Board mit Voting, Roadmap-Timeline, Branded-Export-Card. Größere Bausteine, keine Atome — eher Referenz für „wie baut man sowas", falls CNSL mal einen Multi-Step-Wizard oder ein Board braucht.</p>
+    <h2>App Shell Building Blocks <span class="count">Spirit Sprint, most complex source</span></h2>
+    <p class="section-note">No more landing-page material — real tool UI: sidebar navigation, a 2-axis plot, a kanban-style board with voting, a roadmap timeline, a branded export card. Bigger building blocks, not atoms — more a reference for "how do you build this" if CNSL ever needs a multi-step wizard or a board.</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage dark">
@@ -652,34 +670,34 @@
         </div>
         <div class="pat-meta">
           <p class="pat-name">Sidebar Rail Nav</p>
-          <p class="pat-spec">sticky, volle Höhe, blueberry-bg · Schritte nummeriert, active = lemon-bg</p>
+          <p class="pat-spec">sticky, full height, blueberry bg · steps numbered, active = lemon bg</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.rail, .step)</span>
         </div>
       </div>
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-quad">
-            <span class="pin" style="left:30%;top:35%;">Wettbewerb A</span>
-            <span class="pin us" style="left:65%;top:60%;">Wir</span>
+            <span class="pin" style="left:30%;top:35%;">Competitor A</span>
+            <span class="pin us" style="left:65%;top:60%;">Us</span>
           </div>
         </div>
         <div class="pat-meta">
-          <p class="pat-name">2-Achsen-Plot (Positionierung)</p>
-          <p class="pat-spec">Grid mit Mittellinien · Pins als Pillen · eigene Position = accent</p>
+          <p class="pat-name">2-Axis Plot (Positioning)</p>
+          <p class="pat-spec">grid with center lines · pins as pills · own position = accent</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.quad, .pin)</span>
         </div>
       </div>
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-board">
-            <div class="col"><h5>Ideen</h5><div class="note">Community-Feature</div><div class="note kept">Onboarding fixen</div></div>
-            <div class="col"><h5>Geplant</h5><div class="note">Export als PDF</div></div>
-            <div class="col"><h5>Done</h5><div class="note">Login-Flow</div></div>
+            <div class="col"><h5>Ideas</h5><div class="note">Community feature</div><div class="note kept">Fix onboarding</div></div>
+            <div class="col"><h5>Planned</h5><div class="note">Export as PDF</div></div>
+            <div class="col"><h5>Done</h5><div class="note">Login flow</div></div>
           </div>
         </div>
         <div class="pat-meta">
-          <p class="pat-name">Voting Board (Kanban-artig)</p>
-          <p class="pat-spec">Spalten-Grid · Notiz-Karten · „kept" = accent-bg + bold</p>
+          <p class="pat-name">Voting Board (Kanban-style)</p>
+          <p class="pat-spec">column grid · note cards · "kept" = accent-bg + bold</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.board, .note)</span>
         </div>
       </div>
@@ -695,23 +713,23 @@
           </div>
         </div>
         <div class="pat-meta">
-          <p class="pat-name">Roadmap-Zeitleiste</p>
-          <p class="pat-spec">horizontale Linie · Jahres-Dots · „now" = accent, größer</p>
+          <p class="pat-name">Roadmap Timeline</p>
+          <p class="pat-spec">horizontal line · year dots · "now" = accent, larger</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.road, .year)</span>
         </div>
       </div>
       <div class="pat-card">
         <div class="pat-stage">
           <div class="ex-spirit-card">
-            <div class="eyebrow">Spirit Sprint Ergebnis</div>
+            <div class="eyebrow">Spirit Sprint Result</div>
             <h4>Team Aisu</h4>
-            <div class="row"><span>Soul</span><span>Klarheit</span></div>
-            <div class="row"><span>Strategy</span><span>Nische zuerst</span></div>
+            <div class="row"><span>Soul</span><span>Clarity</span></div>
+            <div class="row"><span>Strategy</span><span>Niche first</span></div>
           </div>
         </div>
         <div class="pat-meta">
           <p class="pat-name">Branded Export Card</p>
-          <p class="pat-spec">fest blueberry/vanilla, unabhängig vom Seiten-Theme (bewusst „shareable artifact")</p>
+          <p class="pat-spec">fixed blueberry/vanilla, independent of the page theme (deliberately a "shareable artifact")</p>
           <span class="origin"><span class="dot fontane"></span>spiritsprint (.spirit-card)</span>
         </div>
       </div>
@@ -719,8 +737,8 @@
   </section>
 
   <section id="onboarding" hidden>
-    <h2>Onboarding &amp; Guidance <span class="count">2 Varianten</span></h2>
-    <p class="section-note">Aus fontanes Erststart-Überarbeitung (2026-07-30): das Settings-Panel öffnet nicht mehr alles auf einmal, und ein neuer Nutzer bekommt eine geführte Tour statt einer Wall of Jargon vor dem ersten Klick.</p>
+    <h2>Onboarding &amp; Guidance <span class="count">2 variants</span></h2>
+    <p class="section-note">From fontane's first-time-UX pass (2026-07-30): the settings panel no longer opens everything at once, and a new user gets a guided tour instead of a wall of jargon before the first click.</p>
     <div class="pat-grid">
       <div class="pat-card">
         <div class="pat-stage dark">
@@ -732,7 +750,7 @@
         </div>
         <div class="pat-meta">
           <p class="pat-name">Collapsible Section</p>
-          <p class="pat-spec">Chevron + Titel als Header · Zustand pro Sektion in localStorage persistiert · Titel bleibt auch zu sichtbar</p>
+          <p class="pat-spec">chevron + title as header · per-section state persisted in localStorage · title stays visible even closed</p>
           <span class="origin"><span class="dot fontane"></span>fontane.studio (SettingsSection.tsx)</span>
         </div>
       </div>
@@ -750,7 +768,7 @@
         </div>
         <div class="pat-meta">
           <p class="pat-name">Coach Marks / Guided Tour</p>
-          <p class="pat-spec">Vier Dimm-Balken statt Box-Shadow-Spread (rendert zuverlässiger) + Lemon-Ring ums Ziel · Callout klappt bei Randnähe um</p>
+          <p class="pat-spec">four dimming bands instead of a box-shadow spread (renders more reliably) + a lemon ring around the target · callout flips when near an edge</p>
           <span class="origin"><span class="dot fontane"></span>fontane.studio (CoachMarks.tsx)</span>
         </div>
       </div>
@@ -758,7 +776,7 @@
   </section>
 
   <footer>
-    <p>github.com/AisuStudio/waffle · Quellen: <a href="https://lab.aisu.studio">lab.aisu.studio</a>, <a href="https://fontane.studio">fontane.studio</a>, <a href="https://github.com/AisuStudio/FullerHome">github.com/AisuStudio/FullerHome</a>, <a href="https://github.com/AisuStudio/spiritsprint">github.com/AisuStudio/spiritsprint</a> · siehe auch <a href="index.html">index.html</a></p>
+    <p>github.com/AisuStudio/waffle · Sources: <a href="https://lab.aisu.studio">lab.aisu.studio</a>, <a href="https://fontane.studio">fontane.studio</a>, <a href="https://github.com/AisuStudio/FullerHome">github.com/AisuStudio/FullerHome</a>, <a href="https://github.com/AisuStudio/spiritsprint">github.com/AisuStudio/spiritsprint</a> · see also <a href="index.html">index.html</a></p>
   </footer>
 </div>
 
