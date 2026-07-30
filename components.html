@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>waffle — components</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter); }
+
+  header.page { padding: var(--sp-2xl) 0 var(--sp-xl); }
+  header.page p { color: var(--color-muted); margin: var(--sp-sm) 0 0; max-width: 62ch; }
+  .page-nav { display: flex; gap: var(--sp-md); margin-top: var(--sp-md); font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .page-nav a { color: var(--color-muted); text-decoration: none; }
+  .page-nav a.current { color: var(--color-text); font-weight: 700; text-decoration: underline; }
+  h1 { font-family: var(--font-mono); font-weight: 700; font-size: 32px; margin: 0; }
+  h2 {
+    font-family: var(--font-mono); font-weight: 700; font-size: 20px;
+    text-transform: uppercase; letter-spacing: .02em; margin: 0 0 var(--sp-xs);
+  }
+  .section-note { color: var(--color-muted); font-size: 13px; margin: 0 0 var(--sp-lg); max-width: 68ch; }
+  section { padding: var(--sp-xl) 0; }
+  section[hidden] { display: none; }
+
+  .wip-note {
+    display: flex; align-items: baseline; gap: var(--sp-sm);
+    border: 1px solid var(--color-hazelnut); border-radius: var(--radius-sm);
+    background: var(--color-cappuccino); padding: var(--sp-sm) var(--sp-lg);
+    margin: 0 0 var(--sp-lg); max-width: 68ch;
+  }
+  .wip-note .tag {
+    flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--color-blueberry);
+    background: var(--color-lemon); padding: 2px 8px; border-radius: var(--radius-xs);
+  }
+  .wip-note p { margin: 0; font-size: 13px; color: var(--color-muted); }
+
+  .tabbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: 4px;
+    background: var(--color-bg);
+    padding: var(--sp-md) 0;
+    border-bottom: 1px solid var(--color-cappuccino);
+  }
+  .tabbtn {
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .02em;
+    color: var(--color-muted); background: none; border: 1px solid transparent; border-radius: var(--radius-full);
+    padding: 7px 14px; cursor: pointer;
+  }
+  .tabbtn:hover { color: var(--color-text); border-color: var(--color-cappuccino); }
+  .tabbtn.active { background: var(--color-accent); color: var(--color-vanilla); font-weight: 700; }
+
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-lg); }
+  .demo-card {
+    border: 1px solid var(--color-cappuccino); border-radius: var(--radius-sm);
+    background: var(--color-vanilla); overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .demo-stage {
+    padding: var(--sp-xl) var(--sp-lg); display: flex; align-items: center; justify-content: center;
+    background: var(--color-cappuccino); min-height: 96px;
+  }
+  .demo-stage.dark { background: var(--color-blueberry); }
+  .demo-meta { padding: var(--sp-md) var(--sp-lg); border-top: 1px solid var(--color-cappuccino); }
+  .demo-name { font-family: var(--font-mono); font-size: 13px; font-weight: 700; margin: 0; }
+
+  footer { padding: var(--sp-2xl) 0 var(--sp-3xl); color: var(--color-muted); font-family: var(--font-mono); font-size: 12px; }
+  footer a { color: var(--color-grape); }
+
+  /* token demos */
+  .tok-row { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-sm) 0; border-bottom: 1px solid var(--color-cappuccino); font-family: var(--font-mono); font-size: 12px; }
+  .tok-row .tag { width: 140px; color: var(--color-muted); flex-shrink: 0; }
+  .tok-box { width: 56px; height: 56px; background: var(--color-grape); flex-shrink: 0; }
+  .tok-shadow-box { width: 100px; height: 56px; background: var(--color-vanilla); border-radius: var(--radius-sm); flex-shrink: 0; }
+  .tok-motion-box {
+    width: 56px; height: 24px; border-radius: var(--radius-full);
+    background: var(--color-cappuccino); position: relative; cursor: pointer; flex-shrink: 0;
+  }
+  .tok-motion-box .knob {
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--color-grape); transition: transform var(--duration-base) var(--ease-standard);
+  }
+  .tok-motion-box.on .knob { transform: translateX(32px); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="page">
+    <h1>waffle / components</h1>
+    <p>The real <code>components.css</code> — every example on this page is the actual shipped class, not a re-styled copy like on the Patterns page. Load <code>tokens.css</code> + <code>components.css</code> and use these classes directly.</p>
+    <nav class="page-nav">
+      <a href="index.html">Tokens</a>
+      <a href="patterns.html">Patterns</a>
+      <a class="current" href="components.html">Components</a>
+    </nav>
+  </header>
+
+  <div class="wip-note">
+    <span class="tag">v0</span>
+    <p>First real pass at components.css. Tokens (colors, spacing, radius, shadow, motion, dark mode) are stable. Components are usable today but expect additions as more projects migrate onto them.</p>
+  </div>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tabbtn" data-tab="tokens-new">New Tokens</button>
+    <button class="tabbtn" data-tab="buttons">Buttons</button>
+    <button class="tabbtn" data-tab="tags">Tags &amp; Badges</button>
+    <button class="tabbtn" data-tab="cards">Cards</button>
+    <button class="tabbtn" data-tab="nav">Navigation</button>
+    <button class="tabbtn" data-tab="forms">Forms</button>
+    <button class="tabbtn" data-tab="data">Data Display</button>
+    <button class="tabbtn" data-tab="layout">Layout</button>
+    <button class="tabbtn" data-tab="glass-cards">Glass Cards</button>
+    <button class="tabbtn" data-tab="tables">Tables</button>
+    <button class="tabbtn" data-tab="app-shell">App-Shell</button>
+    <button class="tabbtn" data-tab="onboarding">Onboarding</button>
+  </nav>
+
+  <section id="tokens-new">
+    <h2>New tokens <span style="color:var(--color-muted); font-weight:400; text-transform:none;">radius · shadow · motion</span></h2>
+    <p class="section-note">Try dark mode via your OS/browser setting — every token below repoints automatically, including the shadows (their opacity is raised in dark mode so they still read).</p>
+    <div class="tok-row"><span class="tag">--radius-xs (3px)</span><div class="tok-box" style="border-radius:var(--radius-xs)"></div></div>
+    <div class="tok-row"><span class="tag">--radius-sm (6px)</span><div class="tok-box" style="border-radius:var(--radius-sm)"></div></div>
+    <div class="tok-row"><span class="tag">--radius-md (10px)</span><div class="tok-box" style="border-radius:var(--radius-md)"></div></div>
+    <div class="tok-row"><span class="tag">--radius-lg (16px)</span><div class="tok-box" style="border-radius:var(--radius-lg)"></div></div>
+    <div class="tok-row"><span class="tag">--radius-full</span><div class="tok-box" style="border-radius:var(--radius-full)"></div></div>
+    <div class="tok-row"><span class="tag">--shadow-sm</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-sm)"></div></div>
+    <div class="tok-row"><span class="tag">--shadow-md</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-md)"></div></div>
+    <div class="tok-row"><span class="tag">--shadow-lg</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-lg)"></div></div>
+    <div class="tok-row"><span class="tag">--duration/--ease (click)</span><div class="tok-motion-box" id="motion-demo"><div class="knob"></div></div></div>
+  </section>
+
+  <section id="buttons" hidden>
+    <h2>Buttons</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage"><a class="wf-btn wf-btn-ghost" href="#">Sign In Anonymously</a></div><div class="demo-meta"><p class="demo-name">.wf-btn-ghost</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-btn wf-btn-primary">Primary</span></div><div class="demo-meta"><p class="demo-name">.wf-btn-primary</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-btn wf-btn-secondary">Start</span></div><div class="demo-meta"><p class="demo-name">.wf-btn-secondary</p></div></div>
+      <div class="demo-card"><div class="demo-stage dark"><span class="wf-btn-toolbar"><span class="wf-item wf-active">Draw</span><span class="wf-item">Brush</span><span class="wf-item">Erase</span></span></div><div class="demo-meta"><p class="demo-name">.wf-btn-toolbar</p></div></div>
+    </div>
+  </section>
+
+  <section id="tags" hidden>
+    <h2>Tags · Badges · Chips</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage dark"><span class="wf-tag-plain">minecraft, redstone, systems</span></div><div class="demo-meta"><p class="demo-name">.wf-tag-plain</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-tag-pill">Critical Path</span></div><div class="demo-meta"><p class="demo-name">.wf-tag-pill</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-badge-ribbon">BETA</span></div><div class="demo-meta"><p class="demo-name">.wf-badge-ribbon</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-badge-accent" style="margin-right:8px;">Critical Path</span><span class="wf-chip-dashed">strategy · undecided</span></div><div class="demo-meta"><p class="demo-name">.wf-badge-accent + .wf-chip-dashed</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><span class="wf-meta-caption">hacking · Level 1</span></div><div class="demo-meta"><p class="demo-name">.wf-meta-caption</p></div></div>
+    </div>
+  </section>
+
+  <section id="cards" hidden>
+    <h2>Cards</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-card-media" style="max-width:220px;">
+          <div class="wf-img"></div>
+          <div class="wf-body"><h4>Redstone Bunker Part 1</h4><div class="wf-tags">hacking · Level 1</div></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-card-media</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-card-info" style="width:100%;"><h4>Germany</h4><p>Special-structure classification varies by dome shape and federal state.</p></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-card-info</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-card-step" style="width:100%;"><span class="wf-idx">TAKT 02</span><h4>Permit Planning</h4><span class="wf-tag-pill">Critical Path</span></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-card-step</p></div></div>
+    </div>
+  </section>
+
+  <section id="nav" hidden>
+    <h2>Navigation</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage dark"><nav class="wf-nav-text"><a class="wf-active" href="#">Exercises</a><a href="#">Tools</a><a href="#">Media</a></nav></div><div class="demo-meta"><p class="demo-name">.wf-nav-text</p></div></div>
+      <div class="demo-card"><div class="demo-stage dark"><nav class="wf-nav-numbered"><a href="#"><span class="wf-num">01</span>Process</a><a href="#"><span class="wf-num">02</span>Cost</a></nav></div><div class="demo-meta"><p class="demo-name">.wf-nav-numbered</p></div></div>
+    </div>
+  </section>
+
+  <section id="forms" hidden>
+    <h2>Forms &amp; Controls</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage">
+        <div><div class="wf-checkbox-row"><input type="checkbox" checked> Latin Basic</div><div class="wf-checkbox-row" style="margin-top:8px"><input type="checkbox"> Symbols</div></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-checkbox-row</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><input class="wf-slider" type="range" value="60"></div><div class="demo-meta"><p class="demo-name">.wf-slider</p></div></div>
+      <div class="demo-card"><div class="demo-stage dark"><div class="wf-tabs"><span class="wf-item wf-active">Grid</span><span class="wf-item">Free Draw</span><span class="wf-item">Editor</span></div></div><div class="demo-meta"><p class="demo-name">.wf-tabs</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-modal" style="width:100%;"><h4>Choose your character sets</h4><p>Before you start drawing, pick which sets belong in this grid.</p><span class="wf-btn wf-btn-secondary">Start</span></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-modal</p></div></div>
+    </div>
+  </section>
+
+  <section id="data" hidden>
+    <h2>Data Display</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage dark"><div class="wf-kpi-row"><span>Prefabrication</span><span class="wf-val">4.5 weeks</span></div></div><div class="demo-meta"><p class="demo-name">.wf-kpi-row</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><div class="wf-progress" style="width:100%;"><div class="wf-track"><div class="wf-fill" style="width:62%"></div></div></div></div><div class="demo-meta"><p class="demo-name">.wf-progress</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-timeline" style="width:100%;"><div class="wf-item"><h5>Building permit filed</h5><p>Week 1</p></div><div class="wf-item"><h5>Permit granted</h5><p>Week 6</p></div></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-timeline</p></div></div>
+    </div>
+  </section>
+
+  <section id="layout" hidden>
+    <h2>Layout Building Blocks</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage"><span class="wf-eyebrow">Robotic Dome Fabrication</span></div><div class="demo-meta"><p class="demo-name">.wf-eyebrow</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><div class="wf-sticky-header" style="position:static;">Fontane.Studio — File · Edit · View · Tools</div></div><div class="demo-meta"><p class="demo-name">.wf-sticky-header</p></div></div>
+    </div>
+  </section>
+
+  <section id="glass-cards" hidden>
+    <h2>Glass Cards &amp; Pill Buttons</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-card-glass" style="width:100%;">
+          <div class="wf-row"><span>Prefabrication</span><span class="wf-val">4.5 weeks</span></div>
+          <div class="wf-row"><span>Assembly</span><span class="wf-val">2 weeks</span></div>
+          <div class="wf-row wf-total"><span>Total</span><span class="wf-val">6.5 weeks</span></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-card-glass</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><div><span class="wf-pill-primary">Start Simulation</span><span class="wf-pill-secondary">Reset</span></div></div><div class="demo-meta"><p class="demo-name">.wf-pill-primary / .wf-pill-secondary</p></div></div>
+      <div class="demo-card"><div class="demo-stage"><div class="wf-toggle-group"><span class="wf-toggle wf-active">1×</span><span class="wf-toggle">2×</span><span class="wf-toggle">4×</span></div></div><div class="demo-meta"><p class="demo-name">.wf-toggle-group / .wf-toggle</p></div></div>
+    </div>
+  </section>
+
+  <section id="tables" hidden>
+    <h2>Data Rows &amp; Tables</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage">
+        <table class="wf-table" style="width:100%;">
+          <thead><tr><th>Measure</th><th>Effort</th><th>Impact</th></tr></thead>
+          <tbody><tr><td>Pull Planning</td><td>low</td><td>high</td></tr><tr><td>Takt Plan</td><td>medium</td><td>high</td></tr></tbody>
+        </table>
+      </div><div class="demo-meta"><p class="demo-name">.wf-table</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-spec-list" style="width:100%;">
+          <div class="wf-row"><span>Structural stability</span><span class="wf-val">checked</span></div>
+          <div class="wf-row"><span>Fire safety</span><span class="wf-val">special structure</span></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-spec-list</p></div></div>
+    </div>
+  </section>
+
+  <section id="app-shell" hidden>
+    <h2>App Shell Building Blocks</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage dark">
+        <div class="wf-rail" style="width:100%;">
+          <div class="wf-brand">Spirit <span>Sprint</span></div>
+          <a class="wf-step wf-active" href="#">1. Soul</a>
+          <a class="wf-step" href="#">2. Skills</a>
+          <a class="wf-step" href="#">3. Strategy</a>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-rail</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-quad" style="width:100%;"><span class="wf-pin" style="left:30%;top:35%;">Competitor A</span><span class="wf-pin wf-us" style="left:65%;top:60%;">Us</span></div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-quad</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-board" style="width:100%;">
+          <div class="wf-col"><h5>Ideas</h5><div class="wf-note">Community feature</div><div class="wf-note wf-kept">Fix onboarding</div></div>
+          <div class="wf-col"><h5>Planned</h5><div class="wf-note">Export as PDF</div></div>
+          <div class="wf-col"><h5>Done</h5><div class="wf-note">Login flow</div></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-board</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-roadmap" style="width:100%;">
+          <div class="wf-line"></div>
+          <div class="wf-years"><div class="wf-year"><div class="wf-dot"></div>2025</div><div class="wf-year wf-now"><div class="wf-dot"></div>2026</div><div class="wf-year"><div class="wf-dot"></div>2027</div></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-roadmap</p></div></div>
+      <div class="demo-card"><div class="demo-stage">
+        <div class="wf-export-card" style="width:100%;">
+          <div class="wf-eyebrow">Spirit Sprint Result</div>
+          <h4>Team Aisu</h4>
+          <div class="wf-row"><span>Soul</span><span>Clarity</span></div>
+          <div class="wf-row"><span>Strategy</span><span>Niche first</span></div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-export-card</p></div></div>
+    </div>
+  </section>
+
+  <section id="onboarding" hidden>
+    <h2>Onboarding &amp; Guidance</h2>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage dark">
+        <div class="wf-collapsible" style="width:100%;">
+          <div class="wf-head"><span class="wf-chev">▼</span>Metrics</div>
+          <div class="wf-body">Ascender · Baseline · Descender</div>
+          <div class="wf-head wf-closed"><span class="wf-chev">▶</span>Stroke</div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-collapsible</p></div></div>
+      <div class="demo-card"><div class="demo-stage dark" style="padding:0;">
+        <div class="wf-coachmark">
+          <div class="wf-dim"></div>
+          <div class="wf-spot" style="top:14px; left:14px; width:72px; height:20px;"></div>
+          <div class="wf-callout" style="top:44px; left:14px; width:152px;">
+            <div class="wf-step">3 / 8</div>
+            <div class="wf-title">Your drawing tools</div>
+            <span class="wf-next">Next</span>
+          </div>
+        </div>
+      </div><div class="demo-meta"><p class="demo-name">.wf-coachmark</p></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>github.com/AisuStudio/waffle · see also <a href="index.html">index.html</a> (tokens) and <a href="patterns.html">patterns.html</a> (source quarry)</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabbtn'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+
+  function show(id) {
+    if (!sections.some(function (s) { return s.id === id; })) id = sections[0].id;
+    sections.forEach(function (s) { s.hidden = s.id !== id; });
+    tabs.forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
+    window.scrollTo(0, 0);
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      history.replaceState(null, '', '#' + t.dataset.tab);
+      show(t.dataset.tab);
+    });
+  });
+
+  show((location.hash || '#tokens-new').slice(1));
+
+  var motionDemo = document.getElementById('motion-demo');
+  if (motionDemo) motionDemo.addEventListener('click', function () { motionDemo.classList.toggle('on'); });
+})();
+</script>
+
+</body>
+</html>

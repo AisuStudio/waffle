@@ -118,6 +118,23 @@
   .t-link { font-family: var(--font-sans); font-weight: 700; font-size: 16px; color: var(--color-grape); text-decoration: underline; }
   .t-link:hover { color: var(--color-blueberry); }
 
+  /* Radius / Shadow / Motion / Breakpoints reference */
+  .tok-row { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-sm) 0; border-bottom: 1px solid var(--color-cappuccino); font-family: var(--font-mono); font-size: 12px; }
+  .tok-row .tag { width: 170px; color: var(--color-muted); flex-shrink: 0; }
+  .tok-box { width: 56px; height: 56px; background: var(--color-grape); flex-shrink: 0; }
+  .tok-shadow-box { width: 120px; height: 56px; background: var(--color-vanilla); border-radius: 6px; flex-shrink: 0; }
+  .tok-motion-box {
+    width: 56px; height: 24px; border-radius: 999px;
+    background: var(--color-cappuccino); position: relative; cursor: pointer; flex-shrink: 0;
+  }
+  .tok-motion-box .knob {
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--color-grape);
+  }
+  .bp-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+  .bp-table th { text-align: left; color: var(--color-muted); font-weight: 400; text-transform: uppercase; letter-spacing: .04em; font-size: 11px; padding: 6px 0; border-bottom: 1px solid var(--color-cappuccino); }
+  .bp-table td { padding: 6px 0; border-bottom: 1px solid var(--color-cappuccino); }
+
   footer { padding: var(--sp-2xl) 0 var(--sp-3xl); color: var(--color-muted); font-family: var(--font-mono); font-size: 12px; }
 
   .wip-note {
@@ -143,12 +160,13 @@
     <nav class="page-nav">
       <a class="current" href="index.html">Tokens</a>
       <a href="patterns.html">Patterns</a>
+      <a href="components.html">Components</a>
     </nav>
   </header>
 
   <div class="wip-note">
     <span class="tag">Work in progress</span>
-    <p>waffle is still being built out. The tokens on this page are stable and safe to use directly; the Patterns page is a rougher quarry of extracted examples, not a finished library yet.</p>
+    <p>waffle is still being built out. The tokens on this page (including dark mode, radius, shadow, and motion below) are stable and safe to use directly; <a href="components.html" style="color:var(--color-blueberry);">components.html</a> has the real component classes; the Patterns page is the rougher quarry they were distilled from.</p>
   </div>
 
   <section>
@@ -232,6 +250,57 @@
       <span class="tag">link<br>Public Sans Bold · 16px</span>
       <a class="t-link" href="#">This is a link</a>
     </div>
+  </section>
+
+  <section id="dark-mode">
+    <h2>Dark mode</h2>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:0 0 var(--sp-md);">
+      Every semantic alias below (bg / surface / surface-2 / text / muted / accent / on-accent / border,
+      plus the shadow scale) repoints for dark automatically — via <code>prefers-color-scheme</code>, or force
+      it with <code>&lt;html data-theme="dark"&gt;</code> / <code>data-theme="light"</code>. The raw
+      <code>--color-*</code> swatches above never change; only the aliases do. Values are the same ones already
+      proven in production by <a class="t-link" href="https://github.com/AisuStudio/spiritsprint" style="font-size:inherit;">AisuStudio/spiritsprint</a>, not a new invention.
+    </p>
+    <p class="t-mono" style="font-size:13px;">Try it: toggle your OS or browser color scheme and reload this page.</p>
+  </section>
+
+  <section>
+    <h2>Radius scale</h2>
+    <div class="tok-row"><span class="tag">--radius-xs (3px)</span><div class="tok-box" style="border-radius:var(--radius-xs)"></div><span style="color:var(--color-muted)">tags, badges, progress fill</span></div>
+    <div class="tok-row"><span class="tag">--radius-sm (6px)</span><div class="tok-box" style="border-radius:var(--radius-sm)"></div><span style="color:var(--color-muted)">buttons, inputs, media cards</span></div>
+    <div class="tok-row"><span class="tag">--radius-md (10px)</span><div class="tok-box" style="border-radius:var(--radius-md)"></div><span style="color:var(--color-muted)">modals, rails, export cards</span></div>
+    <div class="tok-row"><span class="tag">--radius-lg (16px)</span><div class="tok-box" style="border-radius:var(--radius-lg)"></div><span style="color:var(--color-muted)">glass cards, hero panels</span></div>
+    <div class="tok-row"><span class="tag">--radius-full</span><div class="tok-box" style="border-radius:var(--radius-full)"></div><span style="color:var(--color-muted)">pills, toggle groups</span></div>
+  </section>
+
+  <section>
+    <h2>Shadow scale</h2>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:0 0 var(--sp-md);">No horizontal shift by default — straight drop shadows. Opacity is raised automatically in dark mode so they still read against a dark surface.</p>
+    <div class="tok-row"><span class="tag">--shadow-sm</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-sm)"></div></div>
+    <div class="tok-row"><span class="tag">--shadow-md</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-md)"></div></div>
+    <div class="tok-row"><span class="tag">--shadow-lg</span><div class="tok-shadow-box" style="box-shadow:var(--shadow-lg)"></div></div>
+  </section>
+
+  <section>
+    <h2>Motion</h2>
+    <div class="tok-row"><span class="tag">--duration-fast (120ms)</span><div class="tok-motion-box" data-duration="fast"><div class="knob"></div></div><span style="color:var(--color-muted)">click to try</span></div>
+    <div class="tok-row"><span class="tag">--duration-base (200ms)</span><div class="tok-motion-box" data-duration="base"><div class="knob"></div></div><span style="color:var(--color-muted)">hover states, toggles</span></div>
+    <div class="tok-row"><span class="tag">--duration-slow (320ms)</span><div class="tok-motion-box" data-duration="slow"><div class="knob"></div></div><span style="color:var(--color-muted)">panels, modals</span></div>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:var(--sp-md) 0 0;">Easing: <code>--ease-standard</code> (default), <code>--ease-out</code> (entering), <code>--ease-in</code> (exiting).</p>
+  </section>
+
+  <section>
+    <h2>Breakpoints</h2>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:0 0 var(--sp-md);">Reference values only — a media query can't read a CSS custom property, so these aren't functional tokens. Copy the rem value into your own <code>@media</code> rule and keep it in sync with this table by hand.</p>
+    <table class="bp-table">
+      <thead><tr><th>Token</th><th>Value</th><th>Pixels</th></tr></thead>
+      <tbody>
+        <tr><td>--bp-sm</td><td>30rem</td><td>480px</td></tr>
+        <tr><td>--bp-md</td><td>48rem</td><td>768px</td></tr>
+        <tr><td>--bp-lg</td><td>64rem</td><td>1024px</td></tr>
+        <tr><td>--bp-xl</td><td>80rem</td><td>1280px</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section id="export">
@@ -332,17 +401,19 @@
       '  --color-cappuccino:' + currentValue('--color-cappuccino') + ';   /* card / container background */',
       '  --color-vanilla:   ' + currentValue('--color-vanilla') + ';   /* page background */',
       '',
-      '  /* Semantic aliases */',
-      '  --color-bg:       var(--color-vanilla);',
-      '  --color-surface:  var(--color-cappuccino);',
-      '  --color-text:     var(--color-blueberry);',
+      '  /* Semantic aliases — light (default) */',
+      '  --color-bg:        var(--color-vanilla);',
+      '  --color-surface:   var(--color-cappuccino);',
+      '  --color-surface-2: #f2f1eb;',
+      '  --color-text:      var(--color-blueberry);',
       '  /* WCAG: hazelnut on vanilla is only 2.6:1 — fixed value, not derived from the swatch above */',
-      '  --color-muted:    #66655f;',
-      '  --color-accent:   var(--color-grape);',
-      '  --color-highlight:var(--color-lemon);',
+      '  --color-muted:     #66655f;',
+      '  --color-accent:    var(--color-grape);',
+      '  --color-highlight: var(--color-lemon);',
       '  /* on-accent = text for on top of --color-highlight (14.6:1). NOT for',
       '     --color-accent/grape (only 2.24:1) — use --color-vanilla there instead. */',
-      '  --color-on-accent:var(--color-blueberry);',
+      '  --color-on-accent: var(--color-blueberry);',
+      '  --color-border:    rgba(31,25,52,.14);',
       '',
       '  /* Spacing scale */',
       '  --sp-xs:  ' + currentValue('--sp-xs') + ';',
@@ -354,13 +425,88 @@
       '  --sp-3xl: ' + currentValue('--sp-3xl') + ';',
       '  --sp-4xl: ' + currentValue('--sp-4xl') + ';',
       '',
+      '  /* Radius scale */',
+      '  --radius-xs:   3px;',
+      '  --radius-sm:   6px;',
+      '  --radius-md:   10px;',
+      '  --radius-lg:   16px;',
+      '  --radius-full: 999px;',
+      '',
+      '  /* Shadow scale — no horizontal shift by default */',
+      '  --shadow-sm: 0 2px 6px rgba(20,16,31,.10);',
+      '  --shadow-md: 0 8px 20px rgba(20,16,31,.14);',
+      '  --shadow-lg: 0 16px 36px rgba(20,16,31,.18);',
+      '',
+      '  /* Motion */',
+      '  --duration-fast: 120ms;',
+      '  --duration-base: 200ms;',
+      '  --duration-slow: 320ms;',
+      '  --ease-standard: cubic-bezier(.4, 0, .2, 1);',
+      '  --ease-out:      cubic-bezier(0, 0, .2, 1);',
+      '  --ease-in:       cubic-bezier(.4, 0, 1, 1);',
+      '',
       '  /* Layout */',
       '  --container-max: 1200px;',
       '  --gutter: 24px;',
       '',
+      '  /* Breakpoints — reference only, can\'t be read inside @media; copy the',
+      '     raw value into your own media query. */',
+      '  --bp-sm: 30rem;',
+      '  --bp-md: 48rem;',
+      '  --bp-lg: 64rem;',
+      '  --bp-xl: 80rem;',
+      '',
       '  /* Type */',
       '  --font-sans: "Public Sans", system-ui, sans-serif;',
       '  --font-mono: "iA Writer Mono S", ui-monospace, "SF Mono", Menlo, monospace;',
+      '}',
+      '',
+      '/* Dark mode — reuses the values already proven in production by',
+      '   AisuStudio/spiritsprint. Raw --color-* swatches above stay fixed;',
+      '   only the semantic layer repoints. */',
+      '@media (prefers-color-scheme: dark) {',
+      '  :root {',
+      '    --color-bg:        #14101f;',
+      '    --color-surface:   #221c33;',
+      '    --color-surface-2: #1b1628;',
+      '    --color-text:      #f1efe8;',
+      '    --color-muted:     #b3aec4;',
+      '    --color-accent:    #b298ff;',
+      '    --color-highlight: var(--color-lemon);',
+      '    --color-on-accent: var(--color-blueberry);',
+      '    --color-border:    rgba(241,239,232,.14);',
+      '    --shadow-sm: 0 2px 6px rgba(0,0,0,.35);',
+      '    --shadow-md: 0 8px 20px rgba(0,0,0,.45);',
+      '    --shadow-lg: 0 16px 36px rgba(0,0,0,.55);',
+      '  }',
+      '}',
+      ':root[data-theme="dark"] {',
+      '  --color-bg:        #14101f;',
+      '  --color-surface:   #221c33;',
+      '  --color-surface-2: #1b1628;',
+      '  --color-text:      #f1efe8;',
+      '  --color-muted:     #b3aec4;',
+      '  --color-accent:    #b298ff;',
+      '  --color-highlight: var(--color-lemon);',
+      '  --color-on-accent: var(--color-blueberry);',
+      '  --color-border:    rgba(241,239,232,.14);',
+      '  --shadow-sm: 0 2px 6px rgba(0,0,0,.35);',
+      '  --shadow-md: 0 8px 20px rgba(0,0,0,.45);',
+      '  --shadow-lg: 0 16px 36px rgba(0,0,0,.55);',
+      '}',
+      ':root[data-theme="light"] {',
+      '  --color-bg:        var(--color-vanilla);',
+      '  --color-surface:   var(--color-cappuccino);',
+      '  --color-surface-2: #f2f1eb;',
+      '  --color-text:      var(--color-blueberry);',
+      '  --color-muted:     #66655f;',
+      '  --color-accent:    var(--color-grape);',
+      '  --color-highlight: var(--color-lemon);',
+      '  --color-on-accent: var(--color-blueberry);',
+      '  --color-border:    rgba(31,25,52,.14);',
+      '  --shadow-sm: 0 2px 6px rgba(20,16,31,.10);',
+      '  --shadow-md: 0 8px 20px rgba(20,16,31,.14);',
+      '  --shadow-lg: 0 16px 36px rgba(20,16,31,.18);',
       '}',
       '',
       '/* @font-face rules unchanged — copy them from the original tokens.css */'
@@ -389,6 +535,16 @@
   });
 
   updateExport();
+
+  document.querySelectorAll('.tok-motion-box[data-duration]').forEach(function (box) {
+    var knob = box.querySelector('.knob');
+    var durationVar = '--duration-' + box.dataset.duration;
+    knob.style.transition = 'transform var(' + durationVar + ') var(--ease-standard)';
+    box.addEventListener('click', function () {
+      var on = box.classList.toggle('on');
+      knob.style.transform = on ? 'translateX(32px)' : 'translateX(0)';
+    });
+  });
 })();
 </script>
 

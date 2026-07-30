@@ -63,9 +63,10 @@
   --color-cappuccino:#d9d7ce;   /* card / container background */
   --color-vanilla:   #eae8e0;   /* page background */
 
-  /* Semantic aliases */
+  /* Semantic aliases — light (default) */
   --color-bg:       var(--color-vanilla);
   --color-surface:  var(--color-cappuccino);
+  --color-surface-2:#f2f1eb;    /* a step lighter than surface, for surface-on-surface nesting */
   --color-text:     var(--color-blueberry);
   /* WCAG: hazelnut (#9e9c95) on vanilla is only 2.6:1 — darkened to ≥4.5:1.
      Fix carried over from FullerHome's production globals.css. */
@@ -80,6 +81,7 @@
      FullerHome and spiritsprint, where their "accent" token = waffle's
      --color-highlight, not --color-accent. */
   --color-on-accent:var(--color-blueberry);
+  --color-border:   rgba(31,25,52,.14);
 
   /* Spacing scale */
   --sp-xs:  0.25rem;
@@ -91,11 +93,92 @@
   --sp-3xl: 4rem;
   --sp-4xl: 6rem;
 
+  /* Radius scale — xs: tags/badges/progress · sm: buttons/inputs/modals ·
+     md: cards/rails/export cards · lg: glass cards/hero panels · full: pills */
+  --radius-xs:   3px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+
+  /* Shadow scale — neutral, no horizontal shift by default (drop straight down) */
+  --shadow-sm: 0 2px 6px rgba(20,16,31,.10);
+  --shadow-md: 0 8px 20px rgba(20,16,31,.14);
+  --shadow-lg: 0 16px 36px rgba(20,16,31,.18);
+
+  /* Motion — durations + standard easing curves */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --ease-out:      cubic-bezier(0, 0, .2, 1);
+  --ease-in:       cubic-bezier(.4, 0, 1, 1);
+
   /* Layout */
   --container-max: 1200px;
   --gutter: 24px;
 
+  /* Breakpoints — reference values only. CSS custom properties can't be
+     read inside an @media condition, so these aren't functional tokens —
+     copy the raw rem value into your own media query and keep it in sync
+     with this list by hand. */
+  --bp-sm: 30rem;  /* 480px  */
+  --bp-md: 48rem;  /* 768px  */
+  --bp-lg: 64rem;  /* 1024px */
+  --bp-xl: 80rem;  /* 1280px */
+
   /* Type */
   --font-sans: "Public Sans", system-ui, sans-serif;
   --font-mono: "iA Writer Mono S", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Dark mode — reuses the exact values already proven in production by
+   AisuStudio/spiritsprint (.rail/.board/.quad/.trinity-col, shipped and
+   live), not a new invention. Raw --color-* swatches above stay fixed;
+   only the semantic layer repoints. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:        #14101f;
+    --color-surface:   #221c33;
+    --color-surface-2: #1b1628;
+    --color-text:      #f1efe8;
+    --color-muted:     #b3aec4;
+    --color-accent:    #b298ff;   /* lighter violet — grape 1:1 is too dark on a dark bg */
+    --color-highlight: var(--color-lemon);
+    --color-on-accent: var(--color-blueberry);
+    --color-border:    rgba(241,239,232,.14);
+    /* a black shadow barely reads on a dark surface — raise the opacity so
+       elevation still shows; the offsets/blur stay the same as light mode */
+    --shadow-sm: 0 2px 6px rgba(0,0,0,.35);
+    --shadow-md: 0 8px 20px rgba(0,0,0,.45);
+    --shadow-lg: 0 16px 36px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"] {
+  --color-bg:        #14101f;
+  --color-surface:   #221c33;
+  --color-surface-2: #1b1628;
+  --color-text:      #f1efe8;
+  --color-muted:     #b3aec4;
+  --color-accent:    #b298ff;
+  --color-highlight: var(--color-lemon);
+  --color-on-accent: var(--color-blueberry);
+  --color-border:    rgba(241,239,232,.14);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,.35);
+  --shadow-md: 0 8px 20px rgba(0,0,0,.45);
+  --shadow-lg: 0 16px 36px rgba(0,0,0,.55);
+}
+:root[data-theme="light"] {
+  --color-bg:        var(--color-vanilla);
+  --color-surface:   var(--color-cappuccino);
+  --color-surface-2: #f2f1eb;
+  --color-text:      var(--color-blueberry);
+  --color-muted:     #66655f;
+  --color-accent:    var(--color-grape);
+  --color-highlight: var(--color-lemon);
+  --color-on-accent: var(--color-blueberry);
+  --color-border:    rgba(31,25,52,.14);
+  --shadow-sm: 0 2px 6px rgba(20,16,31,.10);
+  --shadow-md: 0 8px 20px rgba(20,16,31,.14);
+  --shadow-lg: 0 16px 36px rgba(20,16,31,.18);
 }

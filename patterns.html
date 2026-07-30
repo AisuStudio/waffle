@@ -242,16 +242,17 @@
 <div class="container">
   <header class="page">
     <h1>waffle / patterns</h1>
-    <p>UI patterns collected from lab.aisu.studio, fontane.studio (live), AisuStudio/FullerHome, and AisuStudio/spiritsprint (real repos) — sorted by component, translated into waffle tokens. Nothing here is final; this is the shortlist for a proper <code>components.css</code> later.</p>
+    <p>UI patterns collected from lab.aisu.studio, fontane.studio (live), AisuStudio/FullerHome, and AisuStudio/spiritsprint (real repos) — sorted by component, translated into waffle tokens. This was the shortlist for a proper <code>components.css</code> — that now exists, see <a href="components.html">components.html</a> for the real, shippable classes. This page stays as the source record of where each pattern came from.</p>
     <nav class="page-nav">
       <a href="index.html">Tokens</a>
       <a class="current" href="patterns.html">Patterns</a>
+      <a href="components.html">Components</a>
     </nav>
   </header>
 
   <div class="wip-note">
-    <span class="tag">Work in progress</span>
-    <p>waffle is still being built out. Tokens are stable and safe to use; everything on this page is a quarry of extracted examples, not a finished component library — expect gaps, rough edges, and breaking changes without notice.</p>
+    <span class="tag">Superseded</span>
+    <p>The examples below are re-styled copies (<code>.ex-*</code> classes), kept for provenance. The real, shippable version of these patterns is <a href="components.html">components.html</a>'s <code>components.css</code> — use that in a project, not this page's markup.</p>
   </div>
 
   <nav class="tabbar" id="tabbar">
@@ -281,17 +282,17 @@
       <div class="finding-card">
         <h3>2. --color-muted isn't WCAG-compliant in waffle</h3>
         <p>FullerHome's <code>globals.css</code> has the same token set as waffle, but with a comment: <code>--color-muted: #66655f</code> instead of hazelnut <code>#9e9c95</code> — "#93928e on vanilla is only 2.6:1 contrast, darkened to ≥4.5:1". That's a real accessibility fix, not a taste difference.</p>
-        <p class="rec">→ Should go straight back into waffle's tokens.css.</p>
+        <p class="rec">✓ Done — <code>--color-muted: #66655f</code> is already in waffle's tokens.css.</p>
       </div>
       <div class="finding-card">
         <h3>3. Missing pair: --color-on-accent</h3>
         <p>FullerHome and spiritsprint both consistently use <code>accent-bg + on-accent-text</code> as the signal for "active/selected/highlighted" (tabs, toggles, badges, chips, totals). Waffle has <code>--color-accent</code>, but no defined counterpart.</p>
-        <p class="rec">→ Add <code>--color-on-accent: var(--color-blueberry)</code>; makes the semantic pairing explicit instead of implicit.</p>
+        <p class="rec">✓ Done — <code>--color-on-accent: var(--color-blueberry)</code> is already in waffle's tokens.css.</p>
       </div>
       <div class="finding-card">
         <h3>4. spiritsprint already has dark mode</h3>
         <p>A full set — <code>--bg/--surface/--surface-2/--ink/--muted/--accent/--highlight/--border</code> — defined twice: via <code>prefers-color-scheme</code> and a <code>[data-theme]</code> override. In dark mode, <code>--accent</code> becomes a lighter violet (<code>#b298ff</code>), not grape 1:1 — otherwise too dark on a dark background.</p>
-        <p class="rec">→ If waffle ever needs dark mode: reuse this pattern instead of designing a new one.</p>
+        <p class="rec">✓ Done — waffle's tokens.css now ships this exact pattern (see <a href="index.html#dark-mode">index.html</a>'s Dark mode section).</p>
       </div>
     </div>
   </section>
