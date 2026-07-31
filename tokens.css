@@ -127,9 +127,14 @@
   --bp-lg: 64rem;  /* 1024px */
   --bp-xl: 80rem;  /* 1280px */
 
-  /* Type */
+  /* Type — role hierarchy: Public Sans is the PRIMARY face (headings, body,
+     buttons, tabs, nav — anything sentence-like or interactive). iA Writer
+     Mono is SECONDARY: small data/label accents only (eyebrows, tags,
+     indices, KPI/spec values, micro brand marks, code). When in doubt: sans. */
   --font-sans: "Public Sans", system-ui, sans-serif;
   --font-mono: "iA Writer Mono S", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-primary:   var(--font-sans);
+  --font-secondary: var(--font-mono);
 }
 
 /* Dark mode — reuses the exact values already proven in production by

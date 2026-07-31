@@ -18,7 +18,8 @@
    Buttons
    ========================================================== */
 .wf-btn {
-  font-family: var(--font-mono);
+  font-family: var(--font-primary);
+  font-weight: 500;
   font-size: 12px;
   text-decoration: none;
   cursor: pointer;
@@ -172,12 +173,12 @@
    Navigation
    ========================================================== */
 /* fixed vanilla text — designed to sit on a dark app-shell strip */
-.wf-nav-text { display: flex; gap: var(--sp-lg); font-family: var(--font-mono); font-size: 12px; }
+.wf-nav-text { display: flex; gap: var(--sp-lg); font-family: var(--font-primary); font-weight: 500; font-size: 12px; }
 .wf-nav-text a { color: var(--color-vanilla); text-decoration: none; opacity: .7; transition: opacity var(--duration-fast) var(--ease-standard); }
 .wf-nav-text a.wf-active, .wf-nav-text a:hover { opacity: 1; }
 .wf-nav-text a.wf-active { text-decoration: underline; }
 
-.wf-nav-numbered { display: flex; gap: var(--sp-md); font-family: var(--font-mono); font-size: 12px; }
+.wf-nav-numbered { display: flex; gap: var(--sp-md); font-family: var(--font-primary); font-weight: 500; font-size: 12px; }
 .wf-nav-numbered a { color: var(--color-vanilla); text-decoration: none; }
 .wf-nav-numbered .wf-num { color: var(--color-highlight); margin-right: 4px; }
 
@@ -191,7 +192,8 @@
 
 .wf-tabs { display: inline-flex; border: 1px solid var(--color-hazelnut); border-radius: var(--radius-sm); overflow: hidden; }
 .wf-tabs .wf-item {
-  font-family: var(--font-mono);
+  font-family: var(--font-primary);
+  font-weight: 500;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: .03em;
@@ -252,7 +254,7 @@
 .wf-sticky-header {
   position: sticky; top: 0; z-index: 10;
   width: 100%; background: rgba(31,25,52,.9); color: var(--color-vanilla);
-  padding: 10px 14px; font-family: var(--font-mono); font-size: 11px;
+  padding: 10px 14px; font-family: var(--font-primary); font-size: 11px;
   border-radius: var(--radius-sm);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -264,18 +266,18 @@
 .wf-pill-primary {
   display: inline-block; padding: 12px 26px; border-radius: var(--radius-full);
   border: 1.5px solid var(--color-blueberry); background: var(--color-highlight);
-  color: var(--color-on-accent); font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+  color: var(--color-on-accent); font-family: var(--font-primary); font-size: 13px; font-weight: 700;
 }
 .wf-pill-secondary {
   display: inline-block; padding: 10px 22px; border-radius: var(--radius-full);
   border: 1.5px solid var(--color-blueberry); background: rgba(255,255,255,.7);
-  color: var(--color-blueberry); font-family: var(--font-mono); font-size: 12px;
+  color: var(--color-blueberry); font-family: var(--font-primary); font-size: 12px;
 }
 .wf-toggle-group { display: inline-flex; gap: 6px; }
 .wf-toggle {
   padding: 8px 14px; border-radius: var(--radius-full); border: 1px solid var(--color-hazelnut);
   background: rgba(255,255,255,.7); color: var(--color-blueberry);
-  font-family: var(--font-mono); font-size: 11px; cursor: pointer;
+  font-family: var(--font-primary); font-size: 11px; cursor: pointer;
 }
 .wf-toggle.wf-active { background: var(--color-highlight); border-color: var(--color-blueberry); font-weight: 700; }
 
