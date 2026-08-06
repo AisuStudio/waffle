@@ -58,6 +58,59 @@
     opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer;
   }
 
+  /* Flavor ramps */
+  .ramps {
+    display: grid;
+    grid-template-columns: auto repeat(5, minmax(0, 1fr));
+    gap: var(--sp-md);
+    align-items: end;
+  }
+  .ramp-axis {
+    display: grid;
+    grid-template-columns: auto auto;
+    /* row height must match .ramp-cell exactly, or the numbers drift
+       against the bands they label */
+    grid-template-rows: repeat(5, var(--sp-xl)) auto;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-muted);
+    height: 100%;
+  }
+  .ramp-axis-title {
+    grid-column: 1; grid-row: 1;
+    align-self: center;
+    white-space: nowrap;
+    padding-right: var(--sp-md);
+  }
+  .ramp-step { grid-column: 2; display: flex; align-items: center; justify-content: flex-end; }
+  .ramp-col {
+    /* lg (16px) would swallow half of a 32px band — md keeps the corner
+       readable at this height */
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .ramp-cell {
+    height: var(--sp-xl);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-blueberry);
+  }
+  .ramp-name {
+    display: block;
+    text-align: center;
+    padding-top: var(--sp-sm);
+    font-size: 14px;
+  }
+  @media (max-width: 48rem) {
+    /* the axis is display:none here, so it leaves the grid flow entirely —
+       the template must drop its auto column too, or ramps fall into it and
+       come out narrower than the rest */
+    .ramps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ramp-axis { display: none; }
+  }
+
   /* Spacing scale */
   .sp-rows { display: flex; flex-direction: column; gap: var(--sp-sm); }
   .sp-row { display: grid; grid-template-columns: 90px 60px 44px 1fr; align-items: center; gap: var(--sp-sm); }
@@ -76,11 +129,19 @@
   button.btn {
     font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
     padding: var(--sp-sm) var(--sp-md);
-    border: 1px solid var(--color-blueberry); border-radius: 6px;
-    background: var(--color-vanilla); color: var(--color-text);
+    /* semantic pair, matching .wf-btn-secondary in components.css. A fixed
+       vanilla background with --color-text on top left the label invisible in
+       dark mode, since only the text token repoints. */
+    border: 1px solid var(--color-text); border-radius: var(--radius-sm);
+    background: var(--color-bg); color: var(--color-text);
     cursor: pointer;
   }
-  button.btn:hover { background: var(--color-lemon); }
+  /* lemon is a fixed swatch in both modes, so its label has to be fixed too —
+     that pairing is exactly what --color-on-accent is for */
+  button.btn:hover { background: var(--color-highlight); color: var(--color-on-accent); border-color: var(--color-highlight); }
+  /* fixed grape/vanilla (6.13:1), the primary-button pattern tokens.css
+     prescribes. NOT var(--color-accent): that repoints to a light violet in
+     dark mode, where vanilla text on it is only 1.94:1. */
   button.btn.primary { background: var(--color-grape); color: var(--color-vanilla); border-color: var(--color-grape); }
   button.btn.primary:hover { opacity: .85; }
   #export-output {
@@ -204,6 +265,89 @@
         <span class="hex" id="hex-vanilla">#eae8e0 · page bg</span>
       </div>
     </div>
+  </section>
+
+  <section>
+    <h2>Tertiary colors — flavor ramps</h2>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:0 0 var(--sp-lg);">
+      The third tier, and a functional one. Above it sit primary (blueberry, grape, lemon — brand and
+      interaction) and secondary (hazelnut, cappuccino, vanilla — surfaces); these carry neither, they only
+      encode meaning in content: sequential scales, heatmaps, intensity or priority coding, categorical
+      series. So don't reach for a flavor to style chrome — a button, a link, a border. Five flavors × five
+      juicyness levels, level 5 full juice and level 1 the most diluted. One level read across flavors gives
+      a categorical series; one flavor read 1&nbsp;→&nbsp;5 gives a sequential scale. Fixed values, like the
+      core swatches: they don't repoint in dark mode.
+    </p>
+    <div class="ramps">
+      <div class="ramp-axis">
+        <span class="ramp-axis-title">Juicyness level</span>
+        <span class="ramp-step">5</span>
+        <span class="ramp-step">4</span>
+        <span class="ramp-step">3</span>
+        <span class="ramp-step">2</span>
+        <span class="ramp-step">1</span>
+        <span></span>
+      </div>
+      <div class="ramp">
+        <div class="ramp-col">
+          <div class="ramp-cell" style="background:var(--color-pistachio-5); color:var(--color-vanilla)">#3e7c1f</div>
+          <div class="ramp-cell" style="background:var(--color-pistachio-4)">#57a03a</div>
+          <div class="ramp-cell" style="background:var(--color-pistachio-3)">#92c982</div>
+          <div class="ramp-cell" style="background:var(--color-pistachio-2)">#a6cd93</div>
+          <div class="ramp-cell" style="background:var(--color-pistachio-1)">#c4ddb6</div>
+        </div>
+        <span class="ramp-name">pistachio</span>
+      </div>
+      <div class="ramp">
+        <div class="ramp-col">
+          <div class="ramp-cell" style="background:var(--color-mango-5)">#ec6608</div>
+          <div class="ramp-cell" style="background:var(--color-mango-4)">#f0921a</div>
+          <div class="ramp-cell" style="background:var(--color-mango-3)">#f2b63c</div>
+          <div class="ramp-cell" style="background:var(--color-mango-2)">#efcc81</div>
+          <div class="ramp-cell" style="background:var(--color-mango-1)">#f0d9a3</div>
+        </div>
+        <span class="ramp-name">mango</span>
+      </div>
+      <div class="ramp">
+        <div class="ramp-col">
+          <div class="ramp-cell" style="background:var(--color-strawberry-5); color:var(--color-vanilla)">#d80b0b</div>
+          <div class="ramp-cell" style="background:var(--color-strawberry-4)">#ee3d28</div>
+          <div class="ramp-cell" style="background:var(--color-strawberry-3)">#e9634f</div>
+          <div class="ramp-cell" style="background:var(--color-strawberry-2)">#e9887b</div>
+          <div class="ramp-cell" style="background:var(--color-strawberry-1)">#f0aaa0</div>
+        </div>
+        <span class="ramp-name">strawberry</span>
+      </div>
+      <div class="ramp">
+        <div class="ramp-col">
+          <div class="ramp-cell" style="background:var(--color-raspberry-5)">#e6187c</div>
+          <div class="ramp-cell" style="background:var(--color-raspberry-4)">#ea4e9f</div>
+          <div class="ramp-cell" style="background:var(--color-raspberry-3)">#ee72b6</div>
+          <div class="ramp-cell" style="background:var(--color-raspberry-2)">#f192c7</div>
+          <div class="ramp-cell" style="background:var(--color-raspberry-1)">#f5b3d6</div>
+        </div>
+        <span class="ramp-name">raspberry</span>
+      </div>
+      <div class="ramp">
+        <div class="ramp-col">
+          <div class="ramp-cell" style="background:var(--color-chocolate-5); color:var(--color-vanilla)">#2b1611</div>
+          <div class="ramp-cell" style="background:var(--color-chocolate-4); color:var(--color-vanilla)">#4b3225</div>
+          <div class="ramp-cell" style="background:var(--color-chocolate-3); color:var(--color-vanilla)">#7a6250</div>
+          <div class="ramp-cell" style="background:var(--color-chocolate-2)">#9f8c7c</div>
+          <div class="ramp-cell" style="background:var(--color-chocolate-1)">#c2b3a5</div>
+        </div>
+        <span class="ramp-name">chocolate</span>
+      </div>
+    </div>
+    <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:var(--sp-lg) 0 0;">
+      Token names are <code>--color-&lt;flavor&gt;-&lt;1–5&gt;</code>; the bare
+      <code>--color-&lt;flavor&gt;</code> is an alias for level 5.
+      <strong>Text on a fill:</strong> ink (blueberry) clears WCAG AA on pistachio 1–4, mango 1–5,
+      strawberry 1–3, raspberry 1–4, chocolate 1–2; vanilla clears it on chocolate 3–5. Four levels land
+      between 3:1 and 4.5:1 — pistachio 5, strawberry 4 and 5, raspberry 5 — so those take large text
+      (≥24px, or ≥18.7px bold) or no text at all. The hexes printed above use whichever of the two reads
+      better on that level — which on those four is still below AA, deliberately, so the limit is visible here.
+    </p>
   </section>
 
   <section>
@@ -400,6 +544,55 @@
       '  --color-hazelnut:  ' + currentValue('--color-hazelnut') + ';   /* borders, dividers, disabled */',
       '  --color-cappuccino:' + currentValue('--color-cappuccino') + ';   /* card / container background */',
       '  --color-vanilla:   ' + currentValue('--color-vanilla') + ';   /* page background */',
+      '',
+      '  /* Flavor ramps — the TERTIARY tier: functional color, five flavors ×',
+      '     five juicyness levels (5 = full juice, 1 = most diluted). Not brand,',
+      '     not surface — they encode meaning in content: sequential scales,',
+      '     heatmaps, intensity/priority coding, categorical series. Never use a',
+      '     flavor for chrome (button, link, border) — that is the tiers above.',
+      '     Fixed values: they do not repoint in dark mode. */',
+      '  --color-pistachio-1: #c4ddb6;',
+      '  --color-pistachio-2: #a6cd93;',
+      '  --color-pistachio-3: #92c982;',
+      '  --color-pistachio-4: #57a03a;',
+      '  --color-pistachio-5: #3e7c1f;',
+      '',
+      '  --color-mango-1:     #f0d9a3;',
+      '  --color-mango-2:     #efcc81;',
+      '  --color-mango-3:     #f2b63c;',
+      '  --color-mango-4:     #f0921a;',
+      '  --color-mango-5:     #ec6608;',
+      '',
+      '  --color-strawberry-1:#f0aaa0;',
+      '  --color-strawberry-2:#e9887b;',
+      '  --color-strawberry-3:#e9634f;',
+      '  --color-strawberry-4:#ee3d28;',
+      '  --color-strawberry-5:#d80b0b;',
+      '',
+      '  --color-raspberry-1: #f5b3d6;',
+      '  --color-raspberry-2: #f192c7;',
+      '  --color-raspberry-3: #ee72b6;',
+      '  --color-raspberry-4: #ea4e9f;',
+      '  --color-raspberry-5: #e6187c;',
+      '',
+      '  --color-chocolate-1: #c2b3a5;',
+      '  --color-chocolate-2: #9f8c7c;',
+      '  --color-chocolate-3: #7a6250;',
+      '  --color-chocolate-4: #4b3225;',
+      '  --color-chocolate-5: #2b1611;',
+      '',
+      '  /* Bare flavor name = full juice */',
+      '  --color-pistachio:  var(--color-pistachio-5);',
+      '  --color-mango:      var(--color-mango-5);',
+      '  --color-strawberry: var(--color-strawberry-5);',
+      '  --color-raspberry:  var(--color-raspberry-5);',
+      '  --color-chocolate:  var(--color-chocolate-5);',
+      '',
+      '  /* Text on a flavor fill (WCAG AA, 4.5:1 body / 3:1 large):',
+      '       ink on:     pistachio 1–4 · mango 1–5 · strawberry 1–3 · raspberry 1–4 · chocolate 1–2',
+      '       vanilla on: chocolate 3–5',
+      '     Between 3:1 and 4.5:1 — pistachio 5, strawberry 4 and 5, raspberry 5:',
+      '     large text only, or no text on the fill. */',
       '',
       '  /* Semantic aliases — light (default) */',
       '  --color-bg:        var(--color-vanilla);',

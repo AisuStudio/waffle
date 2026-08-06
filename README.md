@@ -27,6 +27,8 @@ directly, one at a time, whenever there's a reason to touch them.
 
 ## Tokens
 
+### Primary & secondary colors
+
 | Token | Value | Use |
 |---|---|---|
 | `--color-blueberry` | `#1f1934` | ink, primary text |
@@ -35,6 +37,38 @@ directly, one at a time, whenever there's a reason to touch them.
 | `--color-hazelnut` | `#9e9c95` | borders, dividers, disabled |
 | `--color-cappuccino` | `#d9d7ce` | surface / card background |
 | `--color-vanilla` | `#eae8e0` | page background |
+
+### Tertiary colors — flavor ramps
+
+The third tier, and a functional one. Above it sit **primary**
+(blueberry, grape, lemon — brand and interaction) and **secondary**
+(hazelnut, cappuccino, vanilla — surfaces). The flavors carry neither: they
+encode meaning in *content* — sequential scales, heatmaps, intensity or
+priority coding, categorical series. Don't reach for a flavor to style chrome
+(a button, a link, a border); that's what the tiers above are for.
+
+Five flavors × five juicyness levels — level 5 is full juice (most saturated /
+darkest), level 1 the most diluted. One level read across flavors gives a
+categorical series; one flavor read 1 → 5 gives a sequential scale.
+
+| Flavor | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| `--color-pistachio-*` | `#c4ddb6` | `#a6cd93` | `#92c982` | `#57a03a` | `#3e7c1f` |
+| `--color-mango-*` | `#f0d9a3` | `#efcc81` | `#f2b63c` | `#f0921a` | `#ec6608` |
+| `--color-strawberry-*` | `#f0aaa0` | `#e9887b` | `#e9634f` | `#ee3d28` | `#d80b0b` |
+| `--color-raspberry-*` | `#f5b3d6` | `#f192c7` | `#ee72b6` | `#ea4e9f` | `#e6187c` |
+| `--color-chocolate-*` | `#c2b3a5` | `#9f8c7c` | `#7a6250` | `#4b3225` | `#2b1611` |
+
+The bare `--color-<flavor>` (no number) is an alias for level 5, for the
+common "just give me the color" case. Like the core swatches these are raw
+values — they do **not** repoint in dark mode.
+
+**Text on a flavor fill:** ink (`--color-blueberry`) clears WCAG AA on
+pistachio 1–4, mango 1–5, strawberry 1–3, raspberry 1–4, chocolate 1–2;
+`--color-vanilla` clears it on chocolate 3–5. Four levels land between 3:1 and
+4.5:1 — pistachio 5, strawberry 4 and 5, raspberry 5 — so those take large
+text (≥24px, or ≥18.7px bold) or no text at all; for body copy step one level
+down or put the label outside the fill.
 
 Semantic aliases worth knowing about (see `tokens.css`):
 
