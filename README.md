@@ -72,9 +72,12 @@ down or put the label outside the fill.
 
 Semantic aliases worth knowing about (see `tokens.css`):
 
-- `--color-bg` / `--color-surface` / `--color-surface-2` / `--color-text` / `--color-muted` / `--color-accent` / `--color-highlight` / `--color-on-accent` / `--color-border` — the layer components.css is actually built on. Use these instead of the raw `--color-*` swatches whenever you're describing a *role* (background, muted text, accent) rather than a literal color.
+- `--color-bg` / `--color-surface` / `--color-surface-2` / `--color-text` / `--color-muted` / `--color-accent` / `--color-highlight` / `--color-on-accent` / `--color-on-accent-solid` / `--color-border` — the layer components.css is actually built on. Use these instead of the raw `--color-*` swatches whenever you're describing a *role* (background, muted text, accent) rather than a literal color.
 - `--color-muted: #66655f` — **not** hazelnut. Hazelnut on vanilla is only 2.6:1 contrast; muted text uses this darker value instead (≥4.5:1, WCAG AA). Fix carried over from FullerHome's production `globals.css`.
-- `--color-on-accent: var(--color-blueberry)` — the text/icon color to use on top of `--color-accent` or `--color-highlight` surfaces (active tabs, selected badges, total rows). Always pair `accent-bg` with `on-accent` text, never accent as a text color on its own.
+- `--color-on-accent: var(--color-blueberry)` — the text/icon color for on top of a **`--color-highlight`** (lemon) surface: active tabs, selected badges, total rows. 14.6:1 there. Lemon is a raw swatch that never repoints, so this value is the same in both modes. It is **not** for `--color-accent` — only 2.24:1 on grape.
+- `--color-on-accent-solid` — the text/icon color for on top of a solid **`--color-accent`** fill: primary buttons, active tab chips. Vanilla in light, blueberry in dark. Unlike `on-accent` it *has* to repoint, because the fill under it repoints: vanilla is 6.13:1 on light-mode grape but only 1.94:1 on the dark-mode accent, where blueberry reads at 7.08:1. Pinning the button to a fixed grape fill instead would keep its label legible but sink the fill itself to 2.49:1 against the dark page — under the 3:1 WCAG 1.4.11 wants for a control's own edge, and the reason `--color-accent` repoints at all.
+
+Either way the rule is the same: pair an accent/highlight background with its matching `on-*` text, and never use `--color-accent` as a text color on a fill of its own.
 
 **Dark mode** is built into the semantic layer — via `prefers-color-scheme`, or force it with `<html data-theme="dark">` / `data-theme="light">`. Values are the ones already proven in production by [AisuStudio/spiritsprint](https://github.com/AisuStudio/spiritsprint), not a new invention. The raw `--color-*` swatches never change; only the aliases repoint. Shadows raise their opacity automatically in dark mode so they still read.
 

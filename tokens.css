@@ -135,12 +135,26 @@
   --color-highlight:var(--color-lemon);
   /* Text/icon color for on top of --color-highlight (lemon) surfaces —
      active tabs, selected badges, total rows. 14.6:1 contrast on lemon.
-     Do NOT use this on --color-accent (grape): only 2.24:1 there, fails
-     WCAG AA. Grape surfaces pair with --color-vanilla text instead (6.13:1),
-     same as the primary-button pattern below. Naming/pairing observed in
+     Lemon is a raw swatch that never repoints, so this pairing is the same
+     value in both modes. Do NOT use this on --color-accent: it's only 2.24:1
+     on light-mode grape, and --color-accent isn't a fixed color anyway —
+     that case is --color-on-accent-solid, below. Naming/pairing observed in
      FullerHome and spiritsprint, where their "accent" token = waffle's
      --color-highlight, not --color-accent. */
   --color-on-accent:var(--color-blueberry);
+  /* Text/icon color for on top of a SOLID --color-accent fill — primary
+     buttons, active tab chips. Unlike --color-on-accent this one has to
+     repoint, because the fill under it repoints: vanilla clears AA on
+     light-mode grape (6.13:1) but collapses to 1.94:1 on the dark-mode
+     accent (#b298ff), where blueberry is what reads (7.08:1).
+     Why a token instead of just pinning the button to fixed grape/vanilla:
+     pinning the fill would hold the label at 6.13:1, but a grape fill only
+     reaches 2.49:1 against the #14101f dark page — under the 3:1 that WCAG
+     1.4.11 asks for a control's own edge, and that low fill contrast is the
+     whole reason --color-accent repoints in the first place. Letting the
+     fill follow the theme and repointing its label with it keeps both ends
+     passing (7.08:1 label on a 7.86:1 fill). */
+  --color-on-accent-solid: var(--color-vanilla);
   --color-border:   rgba(31,25,52,.14);
 
   /* Spacing scale */
@@ -211,6 +225,8 @@
     --color-accent:    #b298ff;   /* lighter violet — grape 1:1 is too dark on a dark bg */
     --color-highlight: var(--color-lemon);
     --color-on-accent: var(--color-blueberry);
+    /* flips to ink: vanilla on the lighter dark-mode accent is only 1.94:1 */
+    --color-on-accent-solid: var(--color-blueberry);
     --color-border:    rgba(241,239,232,.14);
     /* a black shadow barely reads on a dark surface — raise the opacity so
        elevation still shows; the offsets/blur stay the same as light mode */
@@ -228,6 +244,7 @@
   --color-accent:    #b298ff;
   --color-highlight: var(--color-lemon);
   --color-on-accent: var(--color-blueberry);
+  --color-on-accent-solid: var(--color-blueberry);
   --color-border:    rgba(241,239,232,.14);
   --shadow-sm: 0 2px 6px rgba(0,0,0,.35);
   --shadow-md: 0 8px 20px rgba(0,0,0,.45);
@@ -242,6 +259,7 @@
   --color-accent:    var(--color-grape);
   --color-highlight: var(--color-lemon);
   --color-on-accent: var(--color-blueberry);
+  --color-on-accent-solid: var(--color-vanilla);
   --color-border:    rgba(31,25,52,.14);
   --shadow-sm: 0 2px 6px rgba(20,16,31,.10);
   --shadow-md: 0 8px 20px rgba(20,16,31,.14);
