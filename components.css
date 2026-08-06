@@ -39,9 +39,13 @@
 }
 .wf-btn-ghost:hover { opacity: .75; }
 
+/* label is --color-on-accent-solid, not a fixed --color-vanilla: the fill
+   under it repoints, and vanilla only survives the light-mode grape (6.13:1),
+   dropping to 1.94:1 on the dark-mode accent. The token flips to ink there
+   (7.08:1). Not --color-on-accent either — that one is for lemon fills. */
 .wf-btn-primary {
   background: var(--color-accent);
-  color: var(--color-vanilla);
+  color: var(--color-on-accent-solid);
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-sm);
   padding: 8px 16px;
@@ -126,7 +130,11 @@
   border-radius: var(--radius-full);
 }
 
-.wf-meta-caption { font-family: var(--font-sans); font-size: 11px; color: var(--color-hazelnut); }
+/* --color-muted, not --color-hazelnut: this caption brings no fill of its own,
+   so it lands on whatever page surface it's dropped onto — and raw hazelnut is
+   a border/divider/disabled swatch, 2.6:1 on vanilla. --color-muted is the
+   darkened text-safe value (>=4.5:1) and repoints for dark mode. */
+.wf-meta-caption { font-family: var(--font-sans); font-size: 11px; color: var(--color-muted); }
 
 /* ==========================================================
    Cards
@@ -150,9 +158,14 @@
 .wf-card-step h4 { font-size: 13px; font-weight: 700; margin: 0 0 6px; }
 
 /* built for a translucent-over-photo look (FullerHome's WebGL canvas
-   backdrop) — still works over a flat token background, just more subtle */
+   backdrop) — still works over a flat token background, just more subtle.
+   The veil is mixed from --color-surface-2 rather than a literal white: its
+   text is --color-text, which repoints, so a hardcoded white panel went
+   light-on-light in dark mode. Mixing off a token keeps the frosted effect
+   (still a step lighter than the page, still translucent over a photo) while
+   following the theme in both directions. */
 .wf-card-glass {
-  background: rgba(255,255,255,.65);
+  background: color-mix(in srgb, var(--color-surface-2) 72%, transparent);
   border: 1px solid var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--sp-lg);
@@ -172,7 +185,9 @@
 /* ==========================================================
    Navigation
    ========================================================== */
-/* fixed vanilla text — designed to sit on a dark app-shell strip */
+/* both nav components below are fixed vanilla text — designed to sit on a dark
+   app-shell strip. .wf-nav-numbered's lemon counters are the tell: lemon on a
+   light surface is 1.06:1, it only reads on dark. */
 .wf-nav-text { display: flex; gap: var(--sp-lg); font-family: var(--font-primary); font-weight: 500; font-size: 12px; }
 .wf-nav-text a { color: var(--color-vanilla); text-decoration: none; opacity: .7; transition: opacity var(--duration-fast) var(--ease-standard); }
 .wf-nav-text a.wf-active, .wf-nav-text a:hover { opacity: 1; }
@@ -268,18 +283,28 @@
   border: 1.5px solid var(--color-blueberry); background: var(--color-highlight);
   color: var(--color-on-accent); font-family: var(--font-primary); font-size: 13px; font-weight: 700;
 }
+/* same translucent veil as .wf-card-glass, mixed off a token for the same
+   reason. These two were hardcoded white with pinned --color-blueberry text —
+   legible in dark mode, but a stark white pill on a dark page next to a glass
+   card that does follow the theme. Surface and label now repoint together. */
 .wf-pill-secondary {
   display: inline-block; padding: 10px 22px; border-radius: var(--radius-full);
-  border: 1.5px solid var(--color-blueberry); background: rgba(255,255,255,.7);
-  color: var(--color-blueberry); font-family: var(--font-primary); font-size: 12px;
+  border: 1.5px solid var(--color-text); background: color-mix(in srgb, var(--color-surface-2) 78%, transparent);
+  color: var(--color-text); font-family: var(--font-primary); font-size: 12px;
 }
 .wf-toggle-group { display: inline-flex; gap: 6px; }
 .wf-toggle {
-  padding: 8px 14px; border-radius: var(--radius-full); border: 1px solid var(--color-hazelnut);
-  background: rgba(255,255,255,.7); color: var(--color-blueberry);
+  padding: 8px 14px; border-radius: var(--radius-full); border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-2) 78%, transparent); color: var(--color-text);
   font-family: var(--font-primary); font-size: 11px; cursor: pointer;
 }
-.wf-toggle.wf-active { background: var(--color-highlight); border-color: var(--color-blueberry); font-weight: 700; }
+/* the active state fills with lemon, which never repoints — so its label must
+   be pinned back to --color-on-accent rather than inheriting the repointing
+   --color-text above (that would be 1.06:1 on lemon in dark mode) */
+.wf-toggle.wf-active {
+  background: var(--color-highlight); color: var(--color-on-accent);
+  border-color: var(--color-text); font-weight: 700;
+}
 
 /* ==========================================================
    Tables & Data Rows
@@ -355,11 +380,16 @@
 .wf-coachmark { position: relative; width: 100%; height: 100%; min-height: 120px; }
 .wf-coachmark .wf-dim { position: absolute; inset: 0; background: rgba(0,0,0,.55); }
 .wf-coachmark .wf-spot { position: absolute; outline: 2px solid var(--color-highlight); background: var(--color-blueberry); border-radius: var(--radius-xs); }
+/* deliberately fixed vanilla/blueberry — the callout floats over the dimmed
+   overlay, so it stays a light card in both modes. Everything inside it must
+   therefore be pinned too: --color-muted on the step counter repointed to a
+   light grey and left it at 1.75:1 on this fixed vanilla panel in dark mode,
+   so it's a fixed ink-at-72% instead (5.8:1, same trick as .wf-rail .wf-step). */
 .wf-coachmark .wf-callout {
   position: absolute; background: var(--color-vanilla); color: var(--color-blueberry);
   border-radius: var(--radius-sm); padding: 8px 10px; box-shadow: var(--shadow-md);
 }
-.wf-coachmark .wf-callout .wf-step { font-family: var(--font-mono); font-size: 9px; color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.wf-coachmark .wf-callout .wf-step { font-family: var(--font-mono); font-size: 9px; color: rgba(31,25,52,.72); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
 .wf-coachmark .wf-callout .wf-title { font-weight: 700; font-size: 11px; margin-bottom: 4px; }
 .wf-coachmark .wf-callout .wf-next {
   display: inline-block; margin-top: 2px; border: 1px solid var(--color-blueberry);

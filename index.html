@@ -37,7 +37,7 @@
     letter-spacing: .02em;
     margin: 0 0 var(--sp-md);
   }
-  section { padding: var(--sp-xl) 0; border-top: 1px solid var(--color-cappuccino); }
+  section { padding: var(--sp-xl) 0; border-top: 1px solid var(--color-border); }
 
   /* Color swatches */
   .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-md); }
@@ -116,12 +116,14 @@
   .sp-row { display: grid; grid-template-columns: 90px 60px 44px 1fr; align-items: center; gap: var(--sp-sm); }
   .sp-row .tag { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); }
   .sp-row .px { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); }
-  .sp-row .bar { background: var(--color-grape); height: 12px; border-radius: 3px; }
+  .sp-row .bar { background: var(--color-accent); height: 12px; border-radius: 3px; }
   .sp-input {
     font-family: var(--font-mono); font-size: 12px;
     width: 60px; padding: 2px 6px;
-    border: 1px solid var(--color-cappuccino); border-radius: 4px;
-    background: var(--color-vanilla); color: var(--color-text);
+    /* was a pinned vanilla field with repointing --color-text on it —
+       invisible in dark mode. Both sides follow the theme now. */
+    border: 1px solid var(--color-border); border-radius: 4px;
+    background: var(--color-bg); color: var(--color-text);
   }
 
   /* Editor toolbar + export */
@@ -139,15 +141,19 @@
   /* lemon is a fixed swatch in both modes, so its label has to be fixed too —
      that pairing is exactly what --color-on-accent is for */
   button.btn:hover { background: var(--color-highlight); color: var(--color-on-accent); border-color: var(--color-highlight); }
-  /* fixed grape/vanilla (6.13:1), the primary-button pattern tokens.css
-     prescribes. NOT var(--color-accent): that repoints to a light violet in
-     dark mode, where vanilla text on it is only 1.94:1. */
-  button.btn.primary { background: var(--color-grape); color: var(--color-vanilla); border-color: var(--color-grape); }
+  /* accent fill + --color-on-accent-solid label, the primary-button pattern
+     tokens.css prescribes. The label token is what repoints, not the fill:
+     a fixed grape fill would keep its label readable but sink to 2.49:1
+     against the dark page. 6.13:1 light / 7.08:1 dark. */
+  button.btn.primary { background: var(--color-accent); color: var(--color-on-accent-solid); border-color: var(--color-accent); }
   button.btn.primary:hover { opacity: .85; }
   #export-output {
     width: 100%; margin-top: var(--sp-md);
     font-family: var(--font-mono); font-size: 12px; line-height: 1.5;
     padding: var(--sp-md); border-radius: 6px;
+    /* deliberately fixed blueberry/vanilla — a code output field, not page
+       content. Its cappuccino outline is the light-on-dark edge that makes it
+       read as a panel; it stays raw on purpose in both modes. */
     border: 1px solid var(--color-cappuccino);
     background: var(--color-blueberry); color: var(--color-vanilla);
   }
@@ -160,7 +166,7 @@
     gap: var(--sp-lg);
     align-items: baseline;
     padding: var(--sp-md) 0;
-    border-bottom: 1px solid var(--color-cappuccino);
+    border-bottom: 1px solid var(--color-border);
   }
   .type-row .tag {
     font-family: var(--font-mono);
@@ -171,42 +177,49 @@
   }
   .type-row p, .type-row h3 { margin: 0; }
   .t-h1 { font-family: var(--font-mono); font-weight: 700; font-size: 32px; }
-  .t-h2 { font-family: var(--font-mono); font-weight: 700; font-size: 20px; color: var(--color-grape); text-transform: uppercase; }
+  /* --color-accent, not raw --color-grape: grape as a text color is 6.13:1 on
+     the light page but 2.49:1 on the dark one. The alias repoints (7.86:1). */
+  .t-h2 { font-family: var(--font-mono); font-weight: 700; font-size: 20px; color: var(--color-accent); text-transform: uppercase; }
   .t-body-lg { font-family: var(--font-sans); font-size: 20px; }
   .t-body { font-family: var(--font-sans); font-size: 16px; }
   .t-caption { font-family: var(--font-sans); font-weight: 700; font-size: 12px; color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; }
   .t-mono { font-family: var(--font-mono); font-size: 14px; }
-  .t-link { font-family: var(--font-sans); font-weight: 700; font-size: 16px; color: var(--color-grape); text-decoration: underline; }
-  .t-link:hover { color: var(--color-blueberry); }
+  .t-link { font-family: var(--font-sans); font-weight: 700; font-size: 16px; color: var(--color-accent); text-decoration: underline; }
+  /* hover was raw --color-blueberry — 13.73:1 light, but 1.11:1 on the dark
+     page, i.e. invisible. --color-text is the ink alias that repoints. */
+  .t-link:hover { color: var(--color-text); }
 
   /* Radius / Shadow / Motion / Breakpoints reference */
-  .tok-row { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-sm) 0; border-bottom: 1px solid var(--color-cappuccino); font-family: var(--font-mono); font-size: 12px; }
+  .tok-row { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-sm) 0; border-bottom: 1px solid var(--color-border); font-family: var(--font-mono); font-size: 12px; }
   .tok-row .tag { width: 170px; color: var(--color-muted); flex-shrink: 0; }
-  .tok-box { width: 56px; height: 56px; background: var(--color-grape); flex-shrink: 0; }
-  .tok-shadow-box { width: 120px; height: 56px; background: var(--color-vanilla); border-radius: 6px; flex-shrink: 0; }
+  .tok-box { width: 56px; height: 56px; background: var(--color-accent); flex-shrink: 0; }
+  /* --color-surface-2, not raw vanilla: this box demos the shadow tokens,
+     which raise their opacity for dark mode — a pinned white box would never
+     show that. */
+  .tok-shadow-box { width: 120px; height: 56px; background: var(--color-surface-2); border-radius: 6px; flex-shrink: 0; }
   .tok-motion-box {
     width: 56px; height: 24px; border-radius: 999px;
-    background: var(--color-cappuccino); position: relative; cursor: pointer; flex-shrink: 0;
+    background: var(--color-surface); position: relative; cursor: pointer; flex-shrink: 0;
   }
   .tok-motion-box .knob {
     position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
-    background: var(--color-grape);
+    background: var(--color-accent);
   }
   .bp-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
-  .bp-table th { text-align: left; color: var(--color-muted); font-weight: 400; text-transform: uppercase; letter-spacing: .04em; font-size: 11px; padding: 6px 0; border-bottom: 1px solid var(--color-cappuccino); }
-  .bp-table td { padding: 6px 0; border-bottom: 1px solid var(--color-cappuccino); }
+  .bp-table th { text-align: left; color: var(--color-muted); font-weight: 400; text-transform: uppercase; letter-spacing: .04em; font-size: 11px; padding: 6px 0; border-bottom: 1px solid var(--color-border); }
+  .bp-table td { padding: 6px 0; border-bottom: 1px solid var(--color-border); }
 
   footer { padding: var(--sp-2xl) 0 var(--sp-3xl); color: var(--color-muted); font-family: var(--font-mono); font-size: 12px; }
 
   .wip-note {
     display: flex; align-items: baseline; gap: var(--sp-sm);
-    border: 1px solid var(--color-hazelnut); border-radius: 6px;
-    background: var(--color-cappuccino); padding: var(--sp-sm) var(--sp-lg);
+    border: 1px solid var(--color-border); border-radius: 6px;
+    background: var(--color-surface); padding: var(--sp-sm) var(--sp-lg);
     margin: 0 0 var(--sp-lg); max-width: 68ch;
   }
   .wip-note .tag {
     flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .06em; color: var(--color-blueberry);
+    text-transform: uppercase; letter-spacing: .06em; color: var(--color-on-accent);
     background: var(--color-lemon); padding: 2px 8px; border-radius: 3px;
   }
   .wip-note p { margin: 0; font-size: 13px; color: var(--color-muted); }
@@ -227,7 +240,7 @@
 
   <div class="wip-note">
     <span class="tag">Work in progress</span>
-    <p>waffle is still being built out. The tokens on this page (including dark mode, radius, shadow, and motion below) are stable and safe to use directly; <a href="components.html" style="color:var(--color-blueberry);">components.html</a> has the real component classes; the Patterns page is the rougher quarry they were distilled from.</p>
+    <p>waffle is still being built out. The tokens on this page (including dark mode, radius, shadow, and motion below) are stable and safe to use directly; <a href="components.html" style="color:var(--color-accent);">components.html</a> has the real component classes; the Patterns page is the rougher quarry they were distilled from.</p>
   </div>
 
   <section>
@@ -399,7 +412,7 @@
   <section id="dark-mode">
     <h2>Dark mode</h2>
     <p class="t-body" style="color:var(--color-muted); font-size:13px; margin:0 0 var(--sp-md);">
-      Every semantic alias below (bg / surface / surface-2 / text / muted / accent / on-accent / border,
+      Every semantic alias below (bg / surface / surface-2 / text / muted / accent / on-accent / on-accent-solid / border,
       plus the shadow scale) repoints for dark automatically — via <code>prefers-color-scheme</code>, or force
       it with <code>&lt;html data-theme="dark"&gt;</code> / <code>data-theme="light"</code>. The raw
       <code>--color-*</code> swatches above never change; only the aliases do. Values are the same ones already
@@ -603,9 +616,15 @@
       '  --color-muted:     #66655f;',
       '  --color-accent:    var(--color-grape);',
       '  --color-highlight: var(--color-lemon);',
-      '  /* on-accent = text for on top of --color-highlight (14.6:1). NOT for',
-      '     --color-accent/grape (only 2.24:1) — use --color-vanilla there instead. */',
+      '  /* on-accent = text for on top of --color-highlight (14.6:1). Lemon is',
+      '     fixed in both modes, so this pairing is too. NOT for --color-accent',
+      '     (2.24:1 on grape) — a solid accent fill takes on-accent-solid. */',
       '  --color-on-accent: var(--color-blueberry);',
+      '  /* on-accent-solid = text for on top of a solid --color-accent fill',
+      '     (primary buttons). Repoints, because the fill under it repoints:',
+      '     vanilla is 6.13:1 on grape but 1.94:1 on the dark accent, where',
+      '     blueberry reads at 7.08:1. */',
+      '  --color-on-accent-solid: var(--color-vanilla);',
       '  --color-border:    rgba(31,25,52,.14);',
       '',
       '  /* Spacing scale */',
@@ -667,6 +686,7 @@
       '    --color-accent:    #b298ff;',
       '    --color-highlight: var(--color-lemon);',
       '    --color-on-accent: var(--color-blueberry);',
+      '    --color-on-accent-solid: var(--color-blueberry);',
       '    --color-border:    rgba(241,239,232,.14);',
       '    --shadow-sm: 0 2px 6px rgba(0,0,0,.35);',
       '    --shadow-md: 0 8px 20px rgba(0,0,0,.45);',
@@ -682,6 +702,7 @@
       '  --color-accent:    #b298ff;',
       '  --color-highlight: var(--color-lemon);',
       '  --color-on-accent: var(--color-blueberry);',
+      '  --color-on-accent-solid: var(--color-blueberry);',
       '  --color-border:    rgba(241,239,232,.14);',
       '  --shadow-sm: 0 2px 6px rgba(0,0,0,.35);',
       '  --shadow-md: 0 8px 20px rgba(0,0,0,.45);',
@@ -696,6 +717,7 @@
       '  --color-accent:    var(--color-grape);',
       '  --color-highlight: var(--color-lemon);',
       '  --color-on-accent: var(--color-blueberry);',
+      '  --color-on-accent-solid: var(--color-vanilla);',
       '  --color-border:    rgba(31,25,52,.14);',
       '  --shadow-sm: 0 2px 6px rgba(20,16,31,.10);',
       '  --shadow-md: 0 8px 20px rgba(20,16,31,.14);',
