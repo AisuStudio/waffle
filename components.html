@@ -140,6 +140,7 @@
     <button class="tabbtn" data-tab="tables">Tables</button>
     <button class="tabbtn" data-tab="app-shell">App-Shell</button>
     <button class="tabbtn" data-tab="onboarding">Onboarding</button>
+    <button class="tabbtn" data-tab="tooltips">Tooltips</button>
   </nav>
 
   <section id="tokens-new">
@@ -328,6 +329,16 @@
           </div>
         </div>
       </div><div class="demo-meta"><p class="demo-name">.wf-coachmark</p></div></div>
+    </div>
+  </section>
+
+  <section id="tooltips" hidden>
+    <h2>Tooltips &amp; Glossary</h2>
+    <p class="section-note">Originated in witty as inline glossary markup (<code>{{Begriff::Erklärung}}</code>) for jargon in running prose. Hover or tab to the dotted term to reveal the explanation — keyboard-accessible via <code>tabindex</code> + <code>:focus-visible</code>, no JS beyond whatever generates the markup.</p>
+    <div class="demo-grid">
+      <div class="demo-card"><div class="demo-stage" style="padding-top:calc(var(--sp-xl) + 20px);">
+        <p style="margin:0; max-width:34ch;">The plan front-loads <span class="wf-gloss" tabindex="0">RICE<span class="wf-gloss-tip" role="tooltip">Reach × Impact × Confidence ÷ Effort — a prioritization score.</span></span> scoring before the roadmap review.</p>
+      </div><div class="demo-meta"><p class="demo-name">.wf-gloss / .wf-gloss-tip</p></div></div>
     </div>
   </section>
 
