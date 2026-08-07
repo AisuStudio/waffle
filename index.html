@@ -176,11 +176,12 @@
     letter-spacing: .04em;
   }
   .type-row p, .type-row h3 { margin: 0; }
-  .t-h1 { font-family: var(--font-mono); font-weight: 700; font-size: 32px; }
+  /* Stoke only ships Light 300 / Regular 400 — no bold, so h1/h2 use 400,
+     the heaviest weight it has. */
+  .t-h1 { font-family: var(--font-headline); font-weight: 400; font-size: 32px; }
   /* --color-accent, not raw --color-grape: grape as a text color is 6.13:1 on
      the light page but 2.49:1 on the dark one. The alias repoints (7.86:1). */
-  .t-h2 { font-family: var(--font-mono); font-weight: 700; font-size: 20px; color: var(--color-accent); text-transform: uppercase; }
-  .t-headline-alt { font-family: var(--font-headline-alt); font-weight: 400; font-size: 32px; }
+  .t-h2 { font-family: var(--font-headline); font-weight: 400; font-size: 20px; color: var(--color-accent); text-transform: uppercase; }
   .t-body-lg { font-family: var(--font-sans); font-size: 20px; }
   .t-body { font-family: var(--font-sans); font-size: 16px; }
   .t-caption { font-family: var(--font-sans); font-weight: 700; font-size: 12px; color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; }
@@ -381,16 +382,12 @@
   <section>
     <h2>Type scale</h2>
     <div class="type-row">
-      <span class="tag">h1<br>iA Writer Mono S Bold · 32px</span>
+      <span class="tag">h1<br>Stoke Regular · 32px</span>
       <h3 class="t-h1">Waffle is the base for every Aisu</h3>
     </div>
     <div class="type-row">
-      <span class="tag">h2<br>iA Writer Mono S Bold · 20px · uppercase</span>
+      <span class="tag">h2<br>Stoke Regular · 20px · uppercase</span>
       <h3 class="t-h2">Section heading</h3>
-    </div>
-    <div class="type-row">
-      <span class="tag">headline-alt<br>Stoke Regular · 32px · optional, display-only</span>
-      <h3 class="t-headline-alt">A headline with more voice</h3>
     </div>
     <div class="type-row">
       <span class="tag">body-lg<br>Public Sans · 20px</span>
@@ -677,6 +674,7 @@
       '  --font-sans: "Public Sans", system-ui, sans-serif;',
       '  --font-mono: "iA Writer Mono S", ui-monospace, "SF Mono", Menlo, monospace;',
       '  --font-stoke: "Stoke", Georgia, serif;',
+      '  --font-headline: var(--font-stoke);',
       '}',
       '',
       '/* Dark mode — reuses the values already proven in production by',

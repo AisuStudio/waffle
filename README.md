@@ -83,16 +83,15 @@ Either way the rule is the same: pair an accent/highlight background with its ma
 
 ### Type
 
-`--font-primary` (Public Sans) is the workhorse — headings, body, buttons, tabs,
-nav, anything sentence-like or interactive. `--font-secondary` (iA Writer Mono)
-is for small data/label accents only — eyebrows, tags, indices, KPI/spec values,
-micro brand marks, code. When in doubt: primary.
+`--font-headline` (Stoke) is for h1/h2 and other display titles — a characterful
+serif that gives headlines more voice than a sans or mono face would. It ships in
+two weights only (Light 300, Regular 400), so it's headline-only: never body copy,
+never small sizes.
 
-`--font-headline-alt` (Stoke) is a third, optional face: a characterful serif for
-large one-off display headlines — hero titles, section splashes — where a project
-wants more voice than the primary/secondary pair gives. It ships in two weights
-only (Light 300, Regular 400), so it's display-only: never body copy, never small
-sizes.
+`--font-primary` (Public Sans) is the workhorse — paragraphs, buttons, tabs, nav,
+anything sentence-like or interactive. `--font-secondary` (iA Writer Mono) is for
+small data/label accents only — eyebrows, tags, indices, KPI/spec values, micro
+brand marks, code. When in doubt: primary.
 
 Other scales, all in `tokens.css`:
 
