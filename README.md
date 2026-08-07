@@ -8,7 +8,7 @@ Waffle is the foundation every ice cream (aisu 🍦) sits on.
 
 - [`tokens.css`](./tokens.css) — colors (incl. dark mode), spacing, radius, shadow, motion, and `@font-face` declarations
 - [`components.css`](./components.css) — real, shippable component classes (`wf-*` prefixed), distilled from `patterns.html`
-- [`fonts/`](./fonts) — Public Sans and iA Writer Mono, self-hosted
+- [`fonts/`](./fonts) — Public Sans, iA Writer Mono, and Stoke, self-hosted
 - [`index.html`](./index.html) — a live, editable reference page for every token, with an Export button
 - [`components.html`](./components.html) — every `components.css` class rendered live, one example each
 - [`patterns.html`](./patterns.html) — the source quarry `components.css` was distilled from (lab.aisu.studio, fontane.studio, AisuStudio/FullerHome, AisuStudio/spiritsprint) — kept for provenance, not for direct use anymore
@@ -80,6 +80,19 @@ Semantic aliases worth knowing about (see `tokens.css`):
 Either way the rule is the same: pair an accent/highlight background with its matching `on-*` text, and never use `--color-accent` as a text color on a fill of its own.
 
 **Dark mode** is built into the semantic layer — via `prefers-color-scheme`, or force it with `<html data-theme="dark">` / `data-theme="light">`. Values are the ones already proven in production by [AisuStudio/spiritsprint](https://github.com/AisuStudio/spiritsprint), not a new invention. The raw `--color-*` swatches never change; only the aliases repoint. Shadows raise their opacity automatically in dark mode so they still read.
+
+### Type
+
+`--font-primary` (Public Sans) is the workhorse — headings, body, buttons, tabs,
+nav, anything sentence-like or interactive. `--font-secondary` (iA Writer Mono)
+is for small data/label accents only — eyebrows, tags, indices, KPI/spec values,
+micro brand marks, code. When in doubt: primary.
+
+`--font-headline-alt` (Stoke) is a third, optional face: a characterful serif for
+large one-off display headlines — hero titles, section splashes — where a project
+wants more voice than the primary/secondary pair gives. It ships in two weights
+only (Light 300, Regular 400), so it's display-only: never body copy, never small
+sizes.
 
 Other scales, all in `tokens.css`:
 

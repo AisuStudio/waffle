@@ -53,6 +53,20 @@
   font-style: italic;
   font-display: swap;
 }
+@font-face {
+  font-family: "Stoke";
+  src: url("fonts/Stoke/Stoke-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stoke";
+  src: url("fonts/Stoke/Stoke-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   /* Color tokens */
@@ -204,11 +218,17 @@
   /* Type — role hierarchy: Public Sans is the PRIMARY face (headings, body,
      buttons, tabs, nav — anything sentence-like or interactive). iA Writer
      Mono is SECONDARY: small data/label accents only (eyebrows, tags,
-     indices, KPI/spec values, micro brand marks, code). When in doubt: sans. */
+     indices, KPI/spec values, micro brand marks, code). When in doubt: sans.
+     Stoke is an OPTIONAL headline-alt face: a characterful serif for large,
+     one-off display headlines (hero titles, section splashes) where a project
+     wants more voice than Public Sans/mono give — not a default, and never
+     for body copy or small sizes (it doesn't have the weight range for that). */
   --font-sans: "Public Sans", system-ui, sans-serif;
   --font-mono: "iA Writer Mono S", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-primary:   var(--font-sans);
-  --font-secondary: var(--font-mono);
+  --font-stoke: "Stoke", Georgia, serif;
+  --font-primary:     var(--font-sans);
+  --font-secondary:   var(--font-mono);
+  --font-headline-alt: var(--font-stoke);
 }
 
 /* Dark mode — reuses the exact values already proven in production by
